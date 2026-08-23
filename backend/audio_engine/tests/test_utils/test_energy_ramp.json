@@ -1,0 +1,30 @@
+{
+  "project": { "name": "Energy Ramp Test", "duration": 30 },
+  "settings": {
+    "scene_crossfade": { "enabled": true, "duration": 2 },
+    "energy_ramp": { "duration": 5 }
+  },
+  "tracks": [
+    { "id": "music", "role": "background", "gain": -6, "clips": [] }
+  ],
+  "scenes": [
+    {
+      "id": "low",
+      "start": 0,
+      "duration": 15,
+      "energy": 0.2,
+      "tracks": {
+        "music": [{ "file": "audio/music/Days.mp3", "loop": true }]
+      }
+    },
+    {
+      "id": "high",
+      "start": 15,
+      "duration": 15,
+      "energy": 0.9,
+      "tracks": {
+        "music": [{ "file": "audio/music/Days.mp3", "loop": true }]
+      }
+    }
+  ]
+}

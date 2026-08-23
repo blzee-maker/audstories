@@ -1,0 +1,16 @@
+{
+  "scene_count": 2,
+  "scene_titles": [
+    "NOWHERE/EVERYWHERE",
+    "INT. EVA GRAFF'S QUARTERS"
+  ],
+  "first_scene_sfx": [
+    "crowd_voices",
+    "ominous_whispers",
+    "sonar_ping",
+    "whale_call_distant"
+  ],
+  "first_scene_speakers": [
+    "EVA"
+  ]
+}

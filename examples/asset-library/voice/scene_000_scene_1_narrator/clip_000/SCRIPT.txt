@@ -1,0 +1,21 @@
+============================================================
+VOICE CLIP REQUIRED
+============================================================
+
+Scene     : Scene 1
+Speaker   : narrator
+Clip      : clip_000
+
+Line to record:
+  "A man was running in park, breathing heavy"
+
+------------------------------------------------------------
+INSTRUCTIONS
+------------------------------------------------------------
+1. Record this line as a WAV file
+2. Name it anything — the resolver finds the first WAV in this folder
+3. Drop the file into this folder
+4. Run: asset-engine status to check readiness
+
+Estimated duration: ~4 seconds
+============================================================

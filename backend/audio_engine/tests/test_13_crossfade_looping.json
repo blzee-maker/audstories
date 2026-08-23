@@ -1,0 +1,57 @@
+{
+    "project": {
+      "name": "Test 2 - Crossfade with Looping",
+      "duration": 40
+    },
+  
+    "settings": {
+      "normalize": false,
+      "master_gain": 0,
+      "scene_crossfade": {
+        "enabled": true,
+        "duration": 4.0
+      }
+    },
+  
+    "tracks": [
+      {
+        "id": "music",
+        "type": "music",
+        "gain": 0,
+        "role": "background",
+        "clips": []
+      }
+    ],
+  
+    "scenes": [
+      {
+        "id": "scene_1",
+        "name": "Looping Intro",
+        "start": 0,
+        "duration": 20,
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/Days.mp3",
+              "loop": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "scene_2",
+        "name": "Looping Continuation",
+        "start": 20,
+        "duration": 20,
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/Days.mp3",
+              "loop": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

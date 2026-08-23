@@ -1,0 +1,3 @@
+Descriptor: heavy_breathing
+Scene: Scene 1
+Semantic Role: texture

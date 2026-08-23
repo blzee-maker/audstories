@@ -1,0 +1,27 @@
+{
+  "project": {
+    "name": "Fade In Only Test",
+    "duration": 15
+  },
+
+  "settings": {
+    "normalize": false,
+    "master_gain": 0
+  },
+
+  "tracks": [
+    {
+      "id": "music",
+      "type": "music",
+      "gain": 0,
+      "clips": [
+        {
+          "file": "audio/music/Days.mp3",
+          "start": 0,
+          "fade_in":5.0,
+          "fade_out": 5.0
+        }
+      ]
+    }
+  ]
+}

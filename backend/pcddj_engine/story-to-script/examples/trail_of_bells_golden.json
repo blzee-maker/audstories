@@ -1,0 +1,17 @@
+{
+  "scene_count": 2,
+  "scene_titles": [
+    "TRAILER BEGINS",
+    "EXT. MOUNTAIN TEMPLE - NIGHT"
+  ],
+  "first_scene_sfx": [
+    "a_single_temple_bell_rings_in_fog"
+  ],
+  "first_scene_action_kinds": [
+    "sfx",
+    "ambience",
+    "title_card",
+    "title_card",
+    "transition"
+  ]
+}

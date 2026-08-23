@@ -1,0 +1,83 @@
+{
+    "project": {
+      "name": "Role Ducking + Scene Override Test",
+      "duration": 120
+    },
+  
+    "settings": {
+      "ducking": {
+        "enabled": true,
+        "duck_amount": -10,
+        "fade_ms": 250,
+        "rules": [
+          {
+            "when": "voice",
+            "duck": ["duckable"]
+          }
+        ]
+      }
+    },
+  
+    "tracks": [
+      {
+        "id": "music",
+        "type": "music",
+        "role": "duckable",
+        "gain": -6,
+        "clips": []
+      },
+      {
+        "id": "dialogue",
+        "type": "voice",
+        "role": "voice",
+        "gain": 0,
+        "clips": [
+          {
+            "file": "audio/voice/Scene - 1.wav",
+            "start": 10
+          },
+          {
+            "file": "audio/voice/Scene - 2.wav",
+            "start": 25
+          }
+        ]
+      }
+    ],
+  
+    "scenes": [
+      {
+        "id": "scene_1",
+        "name": "Light Ducking Scene",
+        "start": 0,
+        "duration": 20,
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/Days.mp3",
+              "loop": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "scene_2",
+        "name": "Heavy Ducking Scene",
+        "start": 20,
+        "duration": 20,
+        "rules": {
+          "ducking": {
+            "duck_amount": -18
+          }
+        },
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/Days.mp3",
+              "loop": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

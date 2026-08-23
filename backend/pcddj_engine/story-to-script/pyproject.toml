@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audstories"
+version = "1.0.0"
+description = "Story-to-script audio storytelling engine"
+requires-python = ">=3.10"
+dependencies = [
+    "spacy>=3.8,<3.9",
+    "sentence-transformers>=2.2",
+    "transformers>=4.36",
+    "pydantic>=2.5",
+    "numpy>=1.26",
+    "orjson>=3.9",
+    "httpx>=0.27",
+    "google-genai>=1.12,<2.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0",
+    "pytest-xdist>=3.5",
+    "en-core-web-sm>=3.8,<3.9",
+]
+
+[tool.setuptools]
+py-modules = ["cli"]
+packages = ["dsl", "dsl.builders", "story_processing", "story_processing.ai", "story_processing.nlp", "story_processing.preprocessing", "story_processing.signals", "story_processing.validation"]
+
+[project.scripts]
+audstories = "cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "spacy: marks tests requiring spaCy model",
+    "contract: marks cross-layer contract tests",
+]

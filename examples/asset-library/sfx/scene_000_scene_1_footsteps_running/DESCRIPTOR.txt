@@ -1,0 +1,3 @@
+Descriptor: footsteps_running
+Scene: Scene 1
+Semantic Role: movement

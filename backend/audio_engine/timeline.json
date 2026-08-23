@@ -1,0 +1,125 @@
+{
+    "project": {
+      "name": "Test Project",
+      "sample_rate": 48000,
+      "bit_depth": 16,
+      "duration": 200.0
+    },
+    "settings": {
+      "default_silence": 0.5,
+      "normalize": true,
+      "master_gain": 0,
+      "ducking":{
+        "enabled":true,
+        "duck_amount":-12,
+        "fade_down_ms": 500,
+        "fade_up_ms": 500,
+        "min_pause_ms": 300,
+
+        "onset_delay_ms": 120,
+        "rules":[
+          {"when":"voice","duck":["duckable"]},
+          {"when":"foreground","duck":["duckable","background"]}
+        ] 
+      },
+      "dialogue_compression":{
+        "enabled":true,
+        "threshold":-18,
+        "ratio":4,
+        "attack_ms":10,
+        "release_ms":120,
+        "makeup_gain":4
+      },
+      "scene_crossfade":{
+        "enabled":true,
+        "duration":1.5
+      },
+      "loudness":{
+        "enabled": true,
+        "target_lufs": -20.0
+      },
+      "energy_ramp":{
+        "duration": 3.0
+      }
+    },
+    
+    "tracks": [
+      {
+        "id": "music",
+        "type": "music",
+        "gain": -10,
+        "role": "duckable",
+        "clips": []
+      },
+      {
+        "id": "dialogue",
+        "type": "voice",
+        "gain": 0,
+        "role": "voice",
+        "clips": [
+          {
+            "file": "audio/voice/Scene - 1.wav",
+            "start": 1.5
+          },
+          {
+            "file": "audio/voice/Scene - 2.wav",
+            "start": 40
+          }
+        ]
+      },
+      {
+        "id": "ambience",
+        "type": "music",
+        "gain": -18,
+        "role": "background",
+        "clips": []
+      }
+    ],
+
+    "scenes": [
+      {
+        "id": "scene_1",
+        "name": "Opening Atmosphere",
+        "start": 0.0,
+        "duration": 40.0,
+        "energy": 0.4,
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/Days.mp3",
+              "loop": true
+            }
+          ],
+          "ambience": [
+            {
+              "file": "audio/ambience/bgmusic.mp3",
+              "loop": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "scene_2",
+        "name": "Dialogue Focus",
+        "start": 40.0,
+        "duration": 60.0,
+        "energy":0.0,
+        "rules":{
+          "ducking":{
+            "duck_amount": -18
+          },
+          "dialogue_compression":{
+            "threshold":-22
+          }
+        },
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/Days.mp3",
+              "loop": true
+            }
+          ]
+        }
+      }
+    ]
+}

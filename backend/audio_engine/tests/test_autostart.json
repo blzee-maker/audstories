@@ -1,0 +1,19 @@
+{
+    "project":{
+        "name":"Basic Autostart test",
+        "duration":120.0
+    },
+    "settings":{
+        "default_silence":0.5
+    },
+    "tracks":[
+        {
+            "id":"dialogue",
+            "gain":0,
+            "clips":[
+                {"file":"audio/voice/scene - 1.wav"},
+                {"file":"audio/voice/scene - 2.wav"}
+            ]
+        }
+    ]
+}

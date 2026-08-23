@@ -1,0 +1,7 @@
+pydub==0.25.1
+numpy==2.3.3
+scipy==1.16.2
+pytest==9.0.2
+pyloudnorm==0.2.0
+soundfile==0.13.1
+audioop-lts>=0.2.2; python_version >= "3.13"

@@ -1,0 +1,10 @@
+{
+  "description": "Default mix profile for audio drama — engine historical defaults.",
+  "project": {
+    "sample_rate": 48000,
+    "bit_depth": 16
+  },
+  "settings": {
+    "peak_target_dbfs": -1.0
+  }
+}

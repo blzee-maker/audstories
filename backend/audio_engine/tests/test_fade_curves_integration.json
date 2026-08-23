@@ -1,0 +1,68 @@
+{
+  "project": {
+    "name": "Fade Curves Integration Test",
+    "duration": 20
+  },
+  "settings": {
+    "normalize": false,
+    "master_gain": 0,
+    "master_fade_out": {
+      "enabled": true,
+      "duration": 3.0,
+      "curve": "exponential"
+    }
+  },
+  "tracks": [
+    {
+      "id": "music1",
+      "type": "music",
+      "gain": 0,
+      "clips": [
+        {
+          "file": "audio/music/Days.mp3",
+          "start": 0,
+          "fade_in": {
+            "duration": 2.0,
+            "curve": "logarithmic"
+          },
+          "fade_out": {
+            "duration": 2.0,
+            "curve": "logarithmic"
+          }
+        }
+      ]
+    },
+    {
+      "id": "music2",
+      "type": "music",
+      "gain": -3,
+      "clips": [
+        {
+          "file": "audio/music/Days.mp3",
+          "start": 10,
+          "fade_in": {
+            "duration": 2.0,
+            "curve": "exponential"
+          },
+          "fade_out": {
+            "duration": 2.0,
+            "curve": "exponential"
+          }
+        }
+      ]
+    },
+    {
+      "id": "music3",
+      "type": "music",
+      "gain": -6,
+      "clips": [
+        {
+          "file": "audio/music/Days.mp3",
+          "start": 5,
+          "fade_in": 1.5,
+          "fade_out": 1.5
+        }
+      ]
+    }
+  ]
+}

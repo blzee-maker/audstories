@@ -1,0 +1,34 @@
+{
+    "project":{
+        "name":"Multi-Track Test",
+        "duration":60
+    },
+    "settings":{
+        "default_silence":0.5,
+        "loudness":{
+            "enabled": true,
+            "target_lufs": -20.0
+        }
+    },
+    "tracks":[
+        {
+            "id":"music",
+            "gain":-8,
+            "clips":[
+                {
+                    "file":"audio/music/Days.mp3",
+                    "start":0
+                }
+            ]
+        },
+        {
+            "id":"dialogue",
+            "clips":[
+                {
+                    "file":"audio/voice/scene - 1.wav",
+                    "start":5
+                }
+            ]
+        }
+    ]
+}

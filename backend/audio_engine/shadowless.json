@@ -1,0 +1,236 @@
+{
+    "project": {
+      "name": "Shadowless - The Invisible Evening",
+      "duration": 110,
+      "sample_rate": 48000,
+      "bit_depth": 16
+    },
+  
+    "settings": {
+      "default_silence": 0.5,
+      "normalize": true,
+      "master_gain": 0,
+
+      "master_fade_out": {
+      "enabled": true,
+      "duration": 10.0
+      },
+  
+      "scene_crossfade": {
+        "enabled": false
+      },
+  
+      "ducking": {
+        "enabled": true,
+        "mode": "audacity",
+        "duck_amount": -8,
+        "fade_down_ms": 600,
+        "fade_up_ms": 600,
+        "min_pause_ms": 300,
+        "onset_delay_ms": 120,
+        "rules": [
+          { "when": "voice", "duck": ["background", "ambience"] }
+        ]
+      },
+  
+      "dialogue_compression": {
+        "enabled": true,
+        "threshold": -22,
+        "ratio": 2.5,
+        "attack_ms": 20,
+        "release_ms": 180,
+        "makeup_gain": 1
+      },
+  
+      "loudness": {
+        "enabled": true,
+        "target_lufs": -20.0
+      }
+    },
+  
+    "tracks": [
+      {
+        "id": "ambience",
+        "type": "ambience",
+        "role": "background",
+        "gain": -16,
+        "clips": []
+      },
+      {
+        "id": "music",
+        "type": "music",
+        "role": "background",
+        "gain": -18,
+        "clips": []
+      },
+      {
+        "id": "dialogue",
+        "type": "voice",
+        "role": "voice",
+        "gain": -16,
+        "clips": []
+      },
+      {
+        "id": "sfx",
+        "type": "sfx",
+        "role": "foreground",
+        "gain": -8,
+        "clips": []
+      }
+    ],
+    "scenes": [
+      {
+        "id": "scene_1",
+        "name": "The Invisible Evening",
+        "start": 0,
+        "duration": 180,
+        "energy": 0.35,
+        "rules":{
+          "ducking": {
+            "enabled": true,
+            "mode": "scene",
+            "duck_amount": -12
+          }
+        },
+  
+        "tracks": {
+          "ambience": [
+            {
+              "file": "audio/ambience/shadowless/soft_lake_waves.mp3",
+              "loop": true,
+              "offset": 8,
+              "gain": -10
+            },
+            {
+              "file":"audio/ambience/shadowless/soft_wind_leaves.mp3",
+              "loop":true,
+              "offset": 8,
+              "gain": -12
+            }
+          ],
+  
+          "music": [
+            {
+              "file": "audio/music/shadowless/shadow.mpeg",
+              "loop": false
+            }
+          ],
+  
+          "sfx": [
+            {
+              "file": "audio/sfx/shadowless/walking_through_grass.mp3",
+              "offset": 10
+            },
+            {
+              "file": "audio/sfx/shadowless/cloth_rustling_3s.mp3",
+              "offset": 12,
+              "fade_out_ms": 500 
+            }
+          ],
+          "dialogue":[
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad1.wav",
+              "offset": 27.5,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd1.wav",
+              "offset":33,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad2.wav",
+              "offset":38,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd2.wav",
+              "offset":41,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad3.wav",
+              "offset":44,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd3.wav",
+              "offset":47,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad4.wav",
+              "offset":51,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd4.wav",
+              "offset":53,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad5.wav",
+              "offset":58,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd5.wav",
+              "offset":62,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad6.wav",
+              "offset":65,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd6.wav",
+              "offset":67,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad7.wav",
+              "offset":75,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd7.wav",
+              "offset":77,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad8.wav",
+              "offset":82,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd8.wav",
+              "offset":85,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad9.wav",
+              "offset":87,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd9.wav",
+              "offset":88,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Ayaan/ad10.wav",
+              "offset":90,
+              "fade_in_ms":300
+            },
+            {
+              "file":"audio/voice/shadowless/Saanvi/sd10.wav",
+              "offset":94,
+              "fade_in_ms":300
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

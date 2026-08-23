@@ -1,0 +1,55 @@
+{
+    "project": {
+      "name": "Scene Crossfade No Dialogue Test",
+      "duration": 60
+    },
+  
+    "settings": {
+      "scene_crossfade": {
+        "enabled": true,
+        "duration": 5.0
+      }
+    },
+  
+    "tracks": [
+      {
+        "id": "music",
+        "type": "music",
+        "role": "background",
+        "gain": -6,
+        "clips": []
+      }
+    ],
+  
+    "scenes": [
+      {
+        "id": "scene_1",
+        "name": "Opening Scene",
+        "start": 0,
+        "duration": 20,
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/Days.mp3",
+              "loop": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "scene_2",
+        "name": "Middle Scene",
+        "start": 20,
+        "duration": 20,
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/ambience/bgmusic.mp3",
+              "loop": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

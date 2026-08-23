@@ -1,0 +1,22 @@
+{
+    "project":{
+        "name":"Gain Test",
+        "duration":20
+    },
+    "settings":{
+        "master_gain":-2
+    },
+    "tracks":[
+        {
+            "id":"music",
+            "gain":-1,
+            "clips":[
+                {
+                    "file":"audio/music/Days.mp3",
+                    "start":0.0,
+                    "gain":0
+                }
+            ]
+        }
+    ]
+}

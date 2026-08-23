@@ -1,0 +1,15 @@
+# Environment variables (API keys — never commit)
+.env
+*.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+
+# Output files
+example_output.json
+example_draft_timeline.json

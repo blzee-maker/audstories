@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "asset-engine"
+version = "0.1.0"
+description = "Draft timeline asset resolution engine"
+requires-python = ">=3.10"
+dependencies = [
+  "pydantic>=2.5",
+  "pydub>=0.25",
+  "soundfile>=0.12",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+asset-engine = "asset_engine.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+markers = [
+  "integration: marks integration tests",
+]
+

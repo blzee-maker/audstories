@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: #8b5cf6;
+  --color-accentHover: #7c3aed;
+  --color-accentFocus: #6d28d9;
+  
+  /* Clean White Light Mode */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surfaceHover: #f8fafc;
+  --color-subtle: #f1f5f9;
+  
+  --color-textPrimary: #09090b;
+  --color-textSecondary: #3f3f46;
+  --color-textMuted: #71717a;
+  
+  --color-border: #e4e4e7;
+  --color-borderFocus: rgba(139, 92, 246, 0.5);
+  
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  --font-sans: "Inter", "system-ui", "sans-serif";
+  --font-mono: "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace";
+}
+
+@layer base {
+  body {
+    @apply bg-background text-textPrimary antialiased font-sans min-h-screen relative overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply flex items-center justify-center font-medium text-white py-3.5 px-6 rounded-xl 
+           bg-accent shadow-sm
+           transition-all duration-300 outline-none 
+           hover:bg-accentHover hover:-translate-y-0.5 hover:shadow-md
+           focus:ring-4 focus:ring-accentFocus/30 
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:bg-zinc-200 disabled:text-zinc-500
+           active:scale-[0.98];
+  }
+  
+  .input-field {
+    @apply w-full bg-white border border-border rounded-xl px-4 py-3.5 text-textPrimary placeholder:text-textMuted 
+           transition-all duration-300 outline-none 
+           hover:border-zinc-300 
+           focus:border-accent focus:ring-2 focus:ring-accent/30 focus:bg-white;
+  }
+  
+  .card {
+    @apply bg-surface border border-border rounded-2xl p-7 shadow-sm;
+  }
+
+  /* Custom styling for standard script textarea */
+  .script-textarea {
+    @apply w-full bg-white border border-border rounded-xl p-5 font-mono text-sm leading-relaxed
+           resize-none outline-none transition-all duration-300 shadow-sm
+           hover:border-zinc-300
+           focus:border-accent focus:ring-2 focus:ring-accent/30 focus:bg-white text-textPrimary placeholder:text-textMuted;
+  }
+  
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-zinc-50;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-zinc-300 rounded-full hover:bg-zinc-400 transition-colors;
+  }
+}

@@ -1,0 +1,57 @@
+{
+    "project": {
+      "name": "Test 1 - Crossfade Fade Intensity",
+      "duration": 30
+    },
+  
+    "settings": {
+      "normalize": false,
+      "master_gain": 0,
+      "scene_crossfade": {
+        "enabled": true,
+        "duration": 4.0
+      }
+    },
+  
+    "tracks": [
+      {
+        "id": "music",
+        "type": "music",
+        "gain": 0,
+        "role": "background",
+        "clips": []
+      }
+    ],
+  
+    "scenes": [
+      {
+        "id": "scene_1",
+        "name": "Intro",
+        "start": 0,
+        "duration": 15,
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/Days.mp3",
+              "loop": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "scene_2",
+        "name": "Continuation",
+        "start": 15,
+        "duration": 15,
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/Days.mp3",
+              "loop": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

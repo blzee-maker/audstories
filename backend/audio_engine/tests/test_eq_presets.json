@@ -1,0 +1,113 @@
+{
+  "project": {
+    "name": "EQ Presets Test",
+    "duration": 30.0,
+    "sample_rate": 48000,
+    "bit_depth": 16
+  },
+  "settings": {
+    "default_silence": 0.5,
+    "normalize": false,
+    "master_gain": 0,
+    "ducking": {
+      "enabled": true,
+      "mode": "audacity",
+      "duck_amount": -6,
+      "fade_down_ms": 300,
+      "fade_up_ms": 300,
+      "min_pause_ms": 200,
+      "onset_delay_ms": 100,
+      "rules": [
+        { "when": "voice", "duck": ["background", "music"] }
+      ]
+    },
+    "loudness": {
+      "enabled": true,
+      "target_lufs": -20.0
+    }
+  },
+  
+  "tracks": [
+    {
+      "id": "dialogue",
+      "type": "voice",
+      "role": "voice",
+      "gain": 0,
+      "clips": []
+    },
+    {
+      "id": "music",
+      "type": "music",
+      "role": "music",
+      "gain": -8,
+      "clips": []
+    },
+    {
+      "id": "ambience",
+      "type": "ambience",
+      "role": "background",
+      "gain": -12,
+      "clips": []
+    }
+  ],
+
+  "scenes": [
+    {
+      "id": "scene_1",
+      "name": "Default EQ Presets (role-based)",
+      "start": 0.0,
+      "duration": 15.0,
+      "energy": 0.5,
+      "tracks": {
+        "dialogue": [
+          {
+            "file": "audio/voice/Scene - 1.wav",
+            "offset": 1.0
+          }
+        ],
+        "music": [
+          {
+            "file": "audio/Music/Days.mp3",
+            "loop": true
+          }
+        ],
+        "ambience": [
+          {
+            "file": "audio/ambience/bgmusic.mp3",
+            "loop": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "scene_2",
+      "name": "Explicit EQ Preset Overrides",
+      "start": 15.0,
+      "duration": 15.0,
+      "energy": 0.6,
+      "tracks": {
+        "dialogue": [
+          {
+            "file": "audio/voice/Scene - 2.wav",
+            "offset": 1.0,
+            "eq_preset": "dialogue_warm"
+          }
+        ],
+        "music": [
+          {
+            "file": "audio/Music/Days.mp3",
+            "loop": true,
+            "eq_preset": "music_full"
+          }
+        ],
+        "ambience": [
+          {
+            "file": "audio/ambience/bgmusic.mp3",
+            "loop": true,
+            "eq_preset": "background_distant"
+          }
+        ]
+      }
+    }
+  ]
+}

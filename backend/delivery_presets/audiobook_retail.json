@@ -1,0 +1,17 @@
+{
+  "description": "Retail audiobook delivery: common peak headroom and broadcast sample rates.",
+  "project": {
+    "sample_rate": 48000,
+    "bit_depth": 16
+  },
+  "settings": {
+    "peak_target_dbfs": -3.0,
+    "target_lufs": -20.0,
+    "output_padding": {
+      "enabled": true,
+      "head_seconds": 1.0,
+      "tail_seconds_min": 1.0,
+      "tail_seconds_max": 5.0
+    }
+  }
+}

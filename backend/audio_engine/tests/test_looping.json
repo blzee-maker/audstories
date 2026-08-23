@@ -1,0 +1,23 @@
+{
+    "project":{
+        "name":"Looping Test",
+        "duration":40.0
+    },
+    "settings":{
+        "default_silence":0.0
+    },
+    "tracks":[
+        {
+            "id":"music",
+            "gain":0,
+            "clips":[
+                {
+                    "file":"audio/ambience/bgmusic.mp3",
+                    "start":5.0,
+                    "loop":true,
+                    "loop_until": 40.0
+                }
+            ]
+        }
+    ]
+}

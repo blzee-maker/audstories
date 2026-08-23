@@ -1,0 +1,45 @@
+{
+    "project":{
+        "name":"multi scene test",
+        "duration":60
+    },
+    "settings":{},
+    "tracks":[
+        {
+            "id":"music",
+            "role":"background",
+            "clips":[]
+        }
+    ],
+
+    "scenes":[
+        {
+            "id":"scene_1",
+            "start":0,
+            "duration":29,
+            "tracks":{
+                "music":[
+                    {
+                        "file":"audio/music/Days.mp3",
+                        "loop":true,
+                        "gain":-6
+                    }
+                ]
+            }
+        },
+        {
+            "id":"scene_2",
+            "start":30,
+            "duration":25,
+            "tracks":{
+                "music":[
+                    {
+                        "file":"audio/music/Days.mp3",
+                        "loop":true,
+                        "gain":-18
+                    }
+                ]
+            }
+        }
+    ]
+}   

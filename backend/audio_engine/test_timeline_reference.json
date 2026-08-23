@@ -1,0 +1,216 @@
+{
+    "project": {
+      "name": "The Last Late Train — Reference Mix",
+      "sample_rate": 48000,
+      "bit_depth": 16,
+      "duration": 120.0
+    },
+  
+    "settings": {
+      "default_silence": 0.3,
+      "normalize": true,
+      "master_gain": 0,
+  
+      "ducking": {
+        "enabled": true,
+        "mode": "audacity",
+        "duck_amount": -8,
+        "fade_down_ms": 400,
+        "fade_up_ms": 600,
+        "min_pause_ms": 350,
+        "onset_delay_ms": 100,
+        "rules": [
+          { "when": "voice", "duck": ["music", "background"] }
+        ]
+      },
+  
+      "dialogue_compression": {
+        "enabled": true,
+        "threshold": -22,
+        "ratio": 2.5,
+        "attack_ms": 15,
+        "release_ms": 200,
+        "makeup_gain": 1
+      },
+  
+      "scene_crossfade": {
+        "enabled": true,
+        "duration": 2.0
+      },
+  
+      "loudness": {
+        "enabled": true,
+        "target_lufs": -20.0
+      },
+  
+      "energy_ramp": {
+        "duration": 3.0
+      },
+  
+      "eq": {
+        "tilt": "warm"
+      },
+  
+      "master_fade_out": {
+        "enabled": true,
+        "duration": 8.0,
+        "curve": "logarithmic"
+      }
+    },
+  
+    "tracks": [
+      {
+        "id": "dialogue",
+        "type": "voice",
+        "gain": 0,
+        "role": "voice",
+        "eq_preset": "dialogue_clean",
+        "clips": [
+          {
+            "file": "audio/voice/narrator_scene1.wav",
+            "start": 3.0,
+            "fade_in": { "duration": 0.03, "curve": "linear" },
+            "fade_out": { "duration": 0.03, "curve": "linear" }
+          },
+          {
+            "file": "audio/voice/narrator_scene2.wav",
+            "start": 47.0,
+            "fade_in": { "duration": 0.03, "curve": "linear" },
+            "fade_out": { "duration": 0.04, "curve": "linear" }
+          },
+          {
+            "file": "audio/voice/narrator_scene3.wav",
+            "start": 91.0,
+            "fade_in": { "duration": 0.03, "curve": "linear" },
+            "fade_out": { "duration": 0.05, "curve": "linear" }
+          }
+        ]
+      },
+      {
+        "id": "music",
+        "type": "music",
+        "gain": -3,
+        "role": "music",
+        "eq_preset": "music_bed",
+        "clips": []
+      },
+      {
+        "id": "ambience",
+        "type": "ambience",
+        "gain": -6,
+        "role": "background",
+        "eq_preset": "background_soft",
+        "clips": []
+      },
+      {
+        "id": "sfx",
+        "type": "sfx",
+        "gain": 0,
+        "role": "sfx",
+        "eq_preset": "sfx_subtle",
+        "clips": []
+      }
+    ],
+  
+    "scenes": [
+      {
+        "id": "scene_1",
+        "name": "The Platform",
+        "start": 0.0,
+        "duration": 45.0,
+        "energy": 0.3,
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/music_bed.wav",
+              "loop": true,
+              "fade_in": { "duration": 3.0, "curve": "logarithmic" }
+            }
+          ],
+          "ambience": [
+            {
+              "file": "audio/ambience/platform_night.wav",
+              "loop": true,
+              "fade_in": { "duration": 2.0, "curve": "logarithmic" }
+            }
+          ]
+        }
+      },
+      {
+        "id": "scene_2",
+        "name": "The Call",
+        "start": 45.0,
+        "duration": 45.0,
+        "energy": 0.55,
+        "rules": {
+          "ducking": {
+            "duck_amount": -10
+          }
+        },
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/music_bed.wav",
+              "loop": true
+            }
+          ],
+          "ambience": [
+            {
+              "file": "audio/ambience/room_tone.wav",
+              "loop": true,
+              "gain": -4
+            }
+          ],
+          "sfx": [
+            {
+              "file": "audio/sfx/phone_ring.wav",
+              "offset": 0.5,
+              "semantic_role": "interaction",
+              "gain": -2,
+              "fade_in": { "duration": 0.05, "curve": "linear" },
+              "fade_out": { "duration": 0.3, "curve": "linear" }
+            }
+          ]
+        }
+      },
+      {
+        "id": "scene_3",
+        "name": "Departure",
+        "start": 90.0,
+        "duration": 30.0,
+        "energy": 0.7,
+        "rules": {
+          "ducking": {
+            "duck_amount": -6
+          }
+        },
+        "tracks": {
+          "music": [
+            {
+              "file": "audio/music/music_resolve.wav",
+              "loop": true,
+              "fade_out": { "duration": 5.0, "curve": "logarithmic" }
+            }
+          ],
+          "ambience": [
+            {
+              "file": "audio/ambience/platform_night.wav",
+              "loop": true,
+              "fade_out": { "duration": 3.0, "curve": "logarithmic" }
+            }
+          ],
+          "sfx": [
+            {
+              "file": "audio/sfx/train_arrival.wav",
+              "offset": 8.0,
+              "semantic_role": "movement",
+              "eq_preset": "sfx_punch",
+              "fade_in": { "duration": 2.0, "curve": "logarithmic" },
+              "fade_out": { "duration": 1.5, "curve": "logarithmic" }
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

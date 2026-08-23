@@ -1,0 +1,91 @@
+{
+  "project": {
+    "name": "SFX Semantic Roles Test - With Semantic Roles",
+    "duration": 30,
+    "sample_rate": 48000,
+    "bit_depth": 16
+  },
+  "settings": {
+    "default_silence": 0.5,
+    "normalize": true,
+    "master_gain": 0,
+    "ducking": {
+      "enabled": true,
+      "mode": "audacity",
+      "duck_amount": -8,
+      "fade_down_ms": 300,
+      "fade_up_ms": 300,
+      "min_pause_ms": 200,
+      "onset_delay_ms": 100,
+      "rules": [
+        { "when": "voice", "duck": ["background", "sfx:ambience", "sfx:movement"] },
+        { "when": "sfx:impact", "duck": ["music", "background"] }
+      ]
+    },
+    "loudness": {
+      "enabled": false
+    }
+  },
+  "tracks": [
+    {
+      "id": "dialogue",
+      "type": "voice",
+      "role": "voice",
+      "gain": 0,
+      "clips": []
+    },
+    {
+      "id": "music",
+      "type": "music",
+      "role": "background",
+      "gain": -12,
+      "clips": []
+    },
+    {
+      "id": "sfx",
+      "type": "sfx",
+      "role": "foreground",
+      "semantic_role": "movement",
+      "gain": 0,
+      "clips": []
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene_1",
+      "name": "Semantic SFX Test",
+      "start": 0,
+      "duration": 30,
+      "energy": 0.5,
+      "tracks": {
+        "music": [
+          {
+            "file": "audio/music/shadowless/shadow.mpeg",
+            "loop": true,
+            "offset": 0
+          }
+        ],
+        "sfx": [
+          {
+            "file": "audio/sfx/shadowless/walking_through_grass.mp3",
+            "offset": 2,
+            "semantic_role": "movement",
+            "gain": 0
+          },
+          {
+            "file": "audio/sfx/shadowless/cloth_rustling_3s.mp3",
+            "offset": 8,
+            "semantic_role": "ambience",
+            "gain": 0
+          },
+          {
+            "file": "audio/sfx/shadowless/exhale.mp3",
+            "offset": 15,
+            "semantic_role": "impact",
+            "gain": 0
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+    "project": {
+      "name": "Role Based Ducking Test",
+      "duration": 30
+    },
+  
+    "settings": {
+      "ducking": {
+        "enabled": true,
+        "duck_amount": -12,
+        "fade_ms": 300,
+        "rules": [
+          {
+            "when": "voice",
+            "duck": ["duckable","background"]
+          }
+        ]
+      }
+    },
+  
+    "tracks": [
+      {
+        "id": "music",
+        "type": "music",
+        "role": "background",
+        "gain": 0,
+        "clips": [
+          {
+            "file": "audio/music/Days.mp3",
+            "start": 0
+          }
+        ]
+      },
+      {
+        "id": "ambience",
+        "type": "music",
+        "role": "background",
+        "gain": -12,
+        "clips": [
+          {
+            "file": "audio/ambience/bgmusic.mp3",
+            "start": 0
+          }
+        ]
+      },
+      {
+        "id": "dialogue",
+        "type": "voice",
+        "role": "voice",
+        "gain": 0,
+        "clips": [
+          {
+            "file": "audio/voice/Scene - 1.wav",
+            "start": 8
+          }
+        ]
+      }
+    ]
+  }
+  

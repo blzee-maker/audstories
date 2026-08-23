@@ -1,0 +1,33 @@
+{
+    "project":{
+        "name":"single scene test",
+        "duration":30
+    },
+    "settings":{},
+    "tracks":[
+        {
+            "id":"music",
+            "role":"background",
+            "gain":-18,
+            "clips":[]
+        }
+    ],
+
+    "scenes":[
+        {
+            "id":"scene_1",
+            "start":0,
+            "duration":30,
+            "tracks":{
+                "music":[
+                    {
+                        "file":"audio/music/Days.mp3",
+                        "loop":true
+                    }
+                ]
+            }
+
+        }
+        
+    ]
+}

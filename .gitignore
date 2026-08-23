@@ -1,0 +1,95 @@
+# ---------------------------------------------------------------
+# Credentials — never commit
+# ---------------------------------------------------------------
+.env
+*.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+*.egg
+.venv/
+venv/
+env/
+
+# ---------------------------------------------------------------
+# Testing
+# ---------------------------------------------------------------
+.pytest_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.hypothesis/
+
+# ---------------------------------------------------------------
+# Node / frontend
+# ---------------------------------------------------------------
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---------------------------------------------------------------
+# Runtime state — project data, job queue, rendered audio
+# ---------------------------------------------------------------
+workspace/
+backend/workspace/
+output/
+backend/output/
+backend/audio_engine/output/
+
+# Generated audio. The checked-in fixtures and example library are
+# force-added below, since everything else of these types is output.
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
+*.mpeg
+!backend/audio_engine/audio/music/Days.mp3
+!examples/asset-library/**/*.mp3
+!examples/asset-library/**/*.wav
+
+# ---------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------
+.vscode/
+.idea/
+.cursor/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Scratch output from pipeline dry-runs
+.tmp_*/

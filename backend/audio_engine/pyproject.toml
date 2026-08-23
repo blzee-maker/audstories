@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audio_engine"
+version = "0.1.0"
+requires-python = ">=3.9,<3.14"
+dependencies = [
+    "pydub>=0.25.1",
+    "numpy>=2.3",
+    "scipy>=1.16",
+    "pyloudnorm>=0.2.0",
+    "soundfile>=0.13",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["audio_engine*"]
