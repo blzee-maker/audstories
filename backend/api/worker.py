@@ -3,6 +3,7 @@ from __future__ import annotations
 import queue
 import re
 import subprocess
+import sys
 import threading
 import uuid
 from dataclasses import dataclass
@@ -130,7 +131,7 @@ class PipelineWorker:
                     self.state_store.update_project(job.project_id, status="stage1")
                     self._call(
                         [
-                            "python",
+                            sys.executable,
                             "book_cli.py",
                             "--projects-root",
                             str(self.projects_root),
@@ -148,7 +149,7 @@ class PipelineWorker:
                         self.state_store.update_project(job.project_id, status="stage2")
                         self._call(
                             [
-                                "python",
+                                sys.executable,
                                 "book_cli.py",
                                 "--projects-root",
                                 str(self.projects_root),
@@ -160,7 +161,7 @@ class PipelineWorker:
                         )
                         self._call(
                             [
-                                "python",
+                                sys.executable,
                                 "book_cli.py",
                                 "--projects-root",
                                 str(self.projects_root),
@@ -180,7 +181,7 @@ class PipelineWorker:
                     if narration == "ai" and fmt == "book":
                         self._call(
                             [
-                                "python",
+                                sys.executable,
                                 "book_cli.py",
                                 "--projects-root",
                                 str(self.projects_root),
@@ -192,7 +193,7 @@ class PipelineWorker:
                         )
                     self._call(
                         [
-                            "python",
+                            sys.executable,
                             "book_cli.py",
                             "--projects-root",
                             str(self.projects_root),
@@ -206,7 +207,7 @@ class PipelineWorker:
                     self.state_store.update_project(job.project_id, status="credits")
                     self._call(
                         [
-                            "python",
+                            sys.executable,
                             "book_cli.py",
                             "--projects-root",
                             str(self.projects_root),

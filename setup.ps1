@@ -105,10 +105,19 @@ Invoke-Step "asset_engine (editable)" { & $PythonExe -m pip install -e (Join-Pat
 Invoke-Step "story-to-script (editable)" { & $PythonExe -m pip install -e (Join-Path $RepoRoot "pcddj_engine\story-to-script") --no-deps }
 Ok "Engine packages registered"
 
-# --- 5. Download spaCy language model -----------------------------------------
+# --- 5. Download spaCy language models -----------------------------------------
+# Two models are required, for different purposes:
+#   en_core_web_lg (~560 MB) - loaded by the runtime NLP pipeline
+#                              (story_processing/nlp/spacy_pipeline.py)
+#   en_core_web_sm (~12 MB)  - loaded by the test suite's shared 'nlp' fixture
+#                              (pcddj_engine/story-to-script/tests/conftest.py)
+# Installing only the large model leaves the test suite erroring with
+# OSError [E050] "Can't find model 'en_core_web_sm'".
 Info "Downloading spaCy English model (en_core_web_lg, ~560 MB - takes a minute)..."
-Invoke-Step "spaCy model download" { & $PythonExe -m spacy download en_core_web_lg }
-Ok "spaCy model ready"
+Invoke-Step "spaCy lg model download" { & $PythonExe -m spacy download en_core_web_lg }
+Info "Downloading spaCy English model (en_core_web_sm, ~12 MB - used by the tests)..."
+Invoke-Step "spaCy sm model download" { & $PythonExe -m spacy download en_core_web_sm }
+Ok "spaCy models ready"
 
 # --- 6. Seed .env files if missing --------------------------------------------
 $BackendEnv  = Join-Path $RepoRoot ".env"

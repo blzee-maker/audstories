@@ -185,7 +185,7 @@ def _load_normalized_metadata(project_root: Path) -> dict:
     return _normalize_book_metadata(raw)
 
 
-def cmd_init(_args: argparse.Namespace) -> int:
+def cmd_init(args: argparse.Namespace) -> int:
     """Interactive wizard: book name, format, writer, chapter title, chapter text."""
     print("=== New book project ===\n")
     book_name = input("Project name (book title): ").strip() or "Untitled"
@@ -196,16 +196,27 @@ def cmd_init(_args: argparse.Namespace) -> int:
     chapter_slug = _sanitize_project_id(chapter_title)[:60]
 
     project_id = _sanitize_project_id(book_name)
-    projects_root = _DEFAULT_PROJECTS
+    # Honour --projects-root rather than always writing to the real workspace.
+    projects_root = Path(getattr(args, "projects_root", None) or _DEFAULT_PROJECTS)
     project_root, assets, out_dir, chapters = _project_paths(project_id, projects_root)
 
     if project_root.exists() and any(project_root.iterdir()):
-        overwrite = input(
-            f"Folder already exists: {project_root}\nOverwrite metadata only? [y/N]: ",
-        ).strip().lower()
-        if overwrite != "y":
-            print("Aborted.")
+        if getattr(args, "yes", False):
+            print(f"Folder already exists: {project_root}\nOverwriting metadata (--yes).")
+        elif not sys.stdin.isatty():
+            print(
+                f"Folder already exists: {project_root}\n"
+                "Refusing to overwrite in non-interactive mode. Re-run with --yes to overwrite.",
+                file=sys.stderr,
+            )
             return 1
+        else:
+            overwrite = input(
+                f"Folder already exists: {project_root}\nOverwrite metadata only? [y/N]: ",
+            ).strip().lower()
+            if overwrite != "y":
+                print("Aborted.")
+                return 1
 
     narration_only = project_type == "audiobook"
     print(
@@ -588,6 +599,12 @@ def _build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command", required=True)
 
     p_init = sub.add_parser("init", help="Prompt for book metadata and chapter text.")
+    p_init.add_argument(
+        "--yes",
+        "-y",
+        action="store_true",
+        help="Overwrite an existing project's metadata without prompting.",
+    )
     p_init.set_defaults(func=cmd_init)
 
     def add_pid(sp: argparse.ArgumentParser) -> None:

@@ -154,7 +154,7 @@ def _run_pipeline(argv: list[str]) -> int:
     return subprocess.call(cmd, cwd=str(_REPO_ROOT))
 
 
-def cmd_init(_args: argparse.Namespace) -> int:
+def cmd_init(args: argparse.Namespace) -> int:
     print("=== New audio drama project ===\n")
     title = input("Project name: ").strip() or "Untitled Drama"
     writer = input("Writer name: ").strip() or "Unknown"
@@ -162,14 +162,31 @@ def cmd_init(_args: argparse.Namespace) -> int:
     chapter_slug = _sanitize_project_id(chapter_title)[:60]
     project_id = _sanitize_project_id(title)
 
-    project_root, assets_root, out_root, chapters_root = _project_paths(project_id, _DEFAULT_PROJECTS)
+    # Honour --projects-root. This previously hardcoded _DEFAULT_PROJECTS, which
+    # meant `init` always wrote to the real workspace even when the caller asked
+    # for somewhere else - so the test suite created projects in workspace/projects
+    # and then tripped over them on the next run.
+    projects_root = Path(getattr(args, "projects_root", None) or _DEFAULT_PROJECTS)
+    project_root, assets_root, out_root, chapters_root = _project_paths(project_id, projects_root)
     if project_root.exists() and any(project_root.iterdir()):
-        overwrite = input(
-            f"Folder already exists: {project_root}\nOverwrite metadata/chapter only? [y/N]: ",
-        ).strip().lower()
-        if overwrite != "y":
-            print("Aborted.")
+        if getattr(args, "yes", False):
+            print(f"Folder already exists: {project_root}\nOverwriting metadata/chapter (--yes).")
+        elif not sys.stdin.isatty():
+            # Non-interactive (test, CI, or the API worker's subprocess): fail with a
+            # usable message rather than blocking on a prompt nobody can answer.
+            print(
+                f"Folder already exists: {project_root}\n"
+                "Refusing to overwrite in non-interactive mode. Re-run with --yes to overwrite.",
+                file=sys.stderr,
+            )
             return 1
+        else:
+            overwrite = input(
+                f"Folder already exists: {project_root}\nOverwrite metadata/chapter only? [y/N]: ",
+            ).strip().lower()
+            if overwrite != "y":
+                print("Aborted.")
+                return 1
 
     if getattr(_args, "template", False):
         body = _FOUNTAIN_TEMPLATE.strip()
@@ -772,6 +789,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "--template",
         action="store_true",
         help="Seed chapter with a Fountain starter template instead of interactive paste.",
+    )
+    p_init.add_argument(
+        "--yes",
+        "-y",
+        action="store_true",
+        help="Overwrite an existing project's metadata/chapter without prompting.",
     )
     p_init.set_defaults(func=cmd_init)
 

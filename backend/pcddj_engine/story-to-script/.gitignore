@@ -12,4 +12,7 @@ venv/
 
 # Output files
 example_output.json
-example_draft_timeline.json
+
+# NOT ignored: example_draft_timeline.json is a committed test fixture.
+# asset_engine/tests/test_contract_with_story_to_script_sample.py skips itself
+# when this file is absent, so ignoring it made that test a permanent no-op.

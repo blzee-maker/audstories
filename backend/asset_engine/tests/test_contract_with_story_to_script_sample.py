@@ -23,9 +23,11 @@ def _write_wav(path: Path, duration: float = 1.0, sample_rate: int = 22050) -> N
 
 @pytest.mark.integration
 def test_story_to_script_sample_contract(tmp_path: Path):
-    sample_draft = Path("c:/AS/pcddj_engine/story-to-script/example_draft_timeline.json")
+    # This file lives at backend/asset_engine/tests/, so parents[2] is backend/.
+    backend_root = Path(__file__).resolve().parents[2]
+    sample_draft = backend_root / "pcddj_engine" / "story-to-script" / "example_draft_timeline.json"
     if not sample_draft.exists():
-        pytest.skip("story-to-script sample draft not found")
+        pytest.skip(f"story-to-script sample draft not found at {sample_draft}")
 
     library = tmp_path / "library"
     _write_wav(library / "music" / "neutral_mid.wav", 3.0)

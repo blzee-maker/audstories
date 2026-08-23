@@ -1,0 +1,192 @@
+{
+  "project": {
+    "name": "auto_generated",
+    "sample_rate": 48000,
+    "bit_depth": 16
+  },
+  "settings": {
+    "default_silence": 0.5,
+    "normalize": true,
+    "master_gain": 0,
+    "ducking": {
+      "enabled": true,
+      "mode": "audacity",
+      "duck_amount": -6,
+      "fade_down_ms": 500,
+      "fade_up_ms": 500,
+      "min_pause_ms": 300,
+      "onset_delay_ms": 120,
+      "rules": [
+        {
+          "when": "voice",
+          "duck": [
+            "background"
+          ]
+        }
+      ]
+    },
+    "dialogue_compression": {
+      "enabled": true,
+      "threshold": -22,
+      "ratio": 2.5,
+      "attack_ms": 20,
+      "release_ms": 180,
+      "makeup_gain": 1
+    },
+    "scene_crossfade": {
+      "enabled": true,
+      "duration": 1.0
+    },
+    "loudness": {
+      "enabled": true,
+      "target_lufs": -20.0
+    }
+  },
+  "tracks": [
+    {
+      "id": "narrator",
+      "type": "voice",
+      "role": "voice",
+      "eq_preset": "dialogue_clean",
+      "gain": 0
+    },
+    {
+      "id": "character_marcus",
+      "type": "voice",
+      "role": "voice",
+      "eq_preset": "dialogue_clean",
+      "gain": 0
+    },
+    {
+      "id": "music",
+      "type": "music",
+      "role": "background",
+      "eq_preset": "music_bed",
+      "gain": -9
+    },
+    {
+      "id": "ambience",
+      "type": "ambience",
+      "role": "background",
+      "eq_preset": "background_soft",
+      "gain": -15
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene_000_3a3e4df9",
+      "name": "Scene 1",
+      "energy": 0.3,
+      "tracks": {
+        "narrator": [
+          {
+            "tts_text": "The cabin shuddered as thunder cracked overhead, and Elena pressed her back against the door, her breath shallow and quick.",
+            "order": 0,
+            "eq_preset": "dialogue_clean"
+          }
+        ],
+        "music": [
+          {
+            "mood": "neutral_mid",
+            "energy_hint": 0.3,
+            "loop": true
+          }
+        ],
+        "ambience": [
+          {
+            "atmosphere": "neutral_room",
+            "loop": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "scene_001_c4dca465",
+      "name": "Scene 2",
+      "energy": 0.3,
+      "tracks": {
+        "narrator": [
+          {
+            "tts_text": "Marcus whispered, his voice barely rising above the storm.",
+            "order": 0,
+            "eq_preset": "dialogue_clean"
+          }
+        ],
+        "character_marcus": [
+          {
+            "tts_text": "We can't stay here,",
+            "order": 1,
+            "eq_preset": "dialogue_clean"
+          }
+        ],
+        "music": [
+          {
+            "mood": "neutral_mid",
+            "energy_hint": 0.3,
+            "loop": true
+          }
+        ],
+        "ambience": [
+          {
+            "atmosphere": "neutral_room",
+            "loop": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "scene_002_51113bac",
+      "name": "Scene 3",
+      "energy": 0.4,
+      "tracks": {
+        "narrator": [
+          {
+            "tts_text": "She didn't move.",
+            "order": 0,
+            "eq_preset": "dialogue_clean"
+          }
+        ],
+        "music": [
+          {
+            "mood": "neutral_mid",
+            "energy_hint": 0.4,
+            "loop": true
+          }
+        ],
+        "ambience": [
+          {
+            "atmosphere": "neutral_room",
+            "loop": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "scene_003_3932a99d",
+      "name": "Scene 4",
+      "energy": 0.4,
+      "tracks": {
+        "character_marcus": [
+          {
+            "tts_text": "Elena, please — they're coming.",
+            "order": 0,
+            "eq_preset": "dialogue_clean"
+          }
+        ],
+        "music": [
+          {
+            "mood": "neutral_mid",
+            "energy_hint": 0.4,
+            "loop": true
+          }
+        ],
+        "ambience": [
+          {
+            "atmosphere": "neutral_room",
+            "loop": true
+          }
+        ]
+      }
+    }
+  ]
+}
