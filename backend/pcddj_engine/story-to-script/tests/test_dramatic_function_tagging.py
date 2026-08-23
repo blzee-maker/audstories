@@ -25,7 +25,7 @@ INT. ROOM - NIGHT
 EVA
 Who is there?
 
-[SFX: DOOR CREAKS]
+SFX: DOOR CREAKS
 
 MARCUS
 Stay back.

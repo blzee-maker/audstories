@@ -3,6 +3,7 @@ Unit tests for fade curve generation and application.
 """
 import numpy as np
 from pydub import AudioSegment
+from pydub.generators import Sine
 
 from audio_engine.dsp.fade_curves import FadeCurve, generate_fade_curve
 from audio_engine.dsp.fades import apply_fade_in, apply_fade_out
@@ -53,7 +54,8 @@ def test_logarithmic_curve():
     
     # Logarithmic should start slower than linear
     mid_point = curve[num_samples // 2]
-    assert mid_point < 0.5  # Should be less than 0.5 at midpoint (slower start)
+    # log10(1 + 9x) is concave: it rises steeply first, so it sits ABOVE linear.
+    assert mid_point > 0.5
 
 
 def test_exponential_curve():
@@ -68,7 +70,8 @@ def test_exponential_curve():
     
     # Exponential should start faster than linear
     mid_point = curve[num_samples // 2]
-    assert mid_point > 0.5  # Should be greater than 0.5 at midpoint (faster start)
+    # (10^x - 1) / 9 is convex: it rises slowly first, so it sits BELOW linear.
+    assert mid_point < 0.5
 
 
 def test_fade_out_curve():
@@ -104,13 +107,15 @@ def test_curve_comparison():
     
     # At midpoint, logarithmic < linear < exponential
     mid_idx = num_samples // 2
-    assert logarithmic[mid_idx] < linear[mid_idx] < exponential[mid_idx]
+    assert exponential[mid_idx] < linear[mid_idx] < logarithmic[mid_idx]
 
 
 def test_fade_integration():
     """Test fade application with different curves."""
     # Create a test audio segment
-    audio = AudioSegment.silent(duration=2000) + AudioSegment.sine(440, duration=2000)
+    # pydub has no AudioSegment.sine; tones come from pydub.generators.
+    tone = Sine(440).to_audio_segment(duration=2000)
+    audio = AudioSegment.silent(duration=2000) + tone
     canvas = AudioSegment.silent(duration=5000)
     canvas = canvas.overlay(audio, position=1000)
     

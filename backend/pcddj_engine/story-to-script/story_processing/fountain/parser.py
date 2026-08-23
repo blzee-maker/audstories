@@ -170,18 +170,38 @@ def _next_nonempty(lines: list[str], start: int) -> tuple[int, str] | None:
     return None
 
 
-def _looks_like_dialogue_continuation(line: str) -> bool:
+def _ends_dialogue_block(line: str) -> bool:
+    """Hard boundaries that always terminate a dialogue block."""
     if _is_scene_heading(line):
-        return False
+        return True
     if _parse_cue(line.rstrip("^").strip()) is not None:
-        return False
+        return True
     if line.startswith("!"):
-        return False
+        return True
     if _ACTION_PREFIX_RE.match(line):
-        return False
+        return True
     if _TITLE_CARD_RE.match(line) or _TRANSITION_RE.match(line):
+        return True
+    return False
+
+
+def _looks_like_dialogue_continuation(line: str) -> bool:
+    """Does *line*, seen across a blank line, continue the current dialogue?
+
+    In Fountain a blank line ends dialogue. The case worth spanning is the
+    parenthetical-beat convention, where "(then)" / "(beat)" / "(silence)"
+    separated by blank lines punctuates one character's speech.
+
+    This used to default to True for anything that was not a hard boundary,
+    which swallowed ordinary stage directions into the preceding dialogue: the
+    SFX cues inside them were never extracted, and the TTS spoke the stage
+    direction aloud as if it were a spoken line. Only a parenthetical continues
+    a block on its own; prose resumes a block only when a parenthetical
+    interrupted it, which the caller tracks.
+    """
+    if _ends_dialogue_block(line):
         return False
-    return True
+    return bool(_PAREN_RE.match(line))
 
 
 def parse_fountain(text: str) -> ScriptAST:
@@ -249,6 +269,11 @@ def parse_fountain(text: str) -> ScriptAST:
             parenthetical: str | None = None
             dialogue_lines: list[str] = []
             inner_idx = idx
+            # True when the last thing consumed was a parenthetical beat such as
+            # "(beat)" / "(then)" / "(silence)". Speech resumes after one of those
+            # across a blank line; plain prose after a blank line with no
+            # intervening parenthetical is a stage direction, not more dialogue.
+            after_parenthetical = False
             while inner_idx < len(lines):
                 candidate = lines[inner_idx].strip()
                 if not candidate:
@@ -257,7 +282,9 @@ def parse_fountain(text: str) -> ScriptAST:
                         inner_idx += 1
                         break
                     _, nxt = peeked
-                    if _looks_like_dialogue_continuation(nxt):
+                    if _looks_like_dialogue_continuation(nxt) or (
+                        after_parenthetical and not _ends_dialogue_block(nxt)
+                    ):
                         inner_idx += 1
                         continue
                     inner_idx += 1
@@ -268,10 +295,11 @@ def parse_fountain(text: str) -> ScriptAST:
                     break
                 if _PAREN_RE.match(candidate) and not dialogue_lines and parenthetical is None:
                     parenthetical = candidate.strip("() ").strip() or None
+                    after_parenthetical = True
                 elif _PAREN_RE.match(candidate):
                     # Mid-dialogue parentheticals (e.g. "(beat)", "(silence)") are
                     # stage directions and should not become spoken text.
-                    pass
+                    after_parenthetical = True
                 elif candidate.startswith("!"):
                     consumed = _consume_prefixed_block(lines, inner_idx)
                     if consumed:
@@ -298,6 +326,7 @@ def parse_fountain(text: str) -> ScriptAST:
                     )
                 else:
                     dialogue_lines.append(candidate)
+                    after_parenthetical = False
                 inner_idx += 1
 
             if dialogue_lines:

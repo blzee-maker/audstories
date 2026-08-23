@@ -87,15 +87,19 @@ class TestDraftTimelineContract:
         assert "tracks" in draft_timeline
         assert "scenes" in draft_timeline
 
-    def test_every_scene_has_voice_clip(self, draft_timeline):
-        """Every scene must have at least one voice clip."""
-        track_type_map = {t["id"]: t["type"] for t in draft_timeline["tracks"]}
+    def test_every_scene_has_audio(self, draft_timeline):
+        """Every scene must produce audio on at least one track.
+
+        Note this is deliberately weaker than "every scene has a voice clip".
+        In audio drama, narration is silent by design - only dialogue becomes
+        voice clips (see _build_audiodrama_voice_clips). A scene of pure
+        description therefore has no voice at all, and carries its meaning
+        through SFX and ambience instead. Requiring a voice clip per scene
+        would forbid that legitimate output.
+        """
         for scene in draft_timeline["scenes"]:
-            has_voice = any(
-                track_type_map.get(tid) == "voice" and len(clips) > 0
-                for tid, clips in scene["tracks"].items()
-            )
-            assert has_voice, f"Scene {scene['id']} has no voice clips"
+            has_audio = any(len(clips) > 0 for clips in scene["tracks"].values())
+            assert has_audio, f"Scene {scene['id']} has no clips on any track"
 
     def test_scene_track_ids_exist(self, draft_timeline):
         """All track IDs referenced in scenes must exist in top-level tracks."""

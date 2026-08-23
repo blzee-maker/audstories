@@ -64,13 +64,13 @@ def generate_fade_curve(
     
     elif curve_type == FadeCurve.LOGARITHMIC:
         # Logarithmic: gain = log10(1 + 9 * progress) / log10(10)
-        # This creates a curve that starts slow and accelerates
+        # Concave: rises steeply at first, then flattens (gain > progress).
         # Maps [0, 1] to [0, 1] using logarithmic scale
         gain = np.log10(1.0 + 9.0 * progress) / math.log10(10.0)
     
     elif curve_type == FadeCurve.EXPONENTIAL:
         # Exponential: gain = (10^progress - 1) / 9
-        # This creates a curve that starts fast and decelerates
+        # Convex: rises slowly at first, then accelerates (gain < progress).
         # Maps [0, 1] to [0, 1] using exponential scale
         gain = (np.power(10.0, progress) - 1.0) / 9.0
     

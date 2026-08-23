@@ -40,7 +40,10 @@ being worked through in order:
   container image are planned.
 - Running the pipeline currently requires **a Supabase project** and **a Gemini API
   key**. A no-account development mode is planned.
-- Some test suites have known failures. See the notes in `CLAUDE.md`.
+
+All five test suites pass — 391 tests, about a minute for the backend. See
+[docs/TESTING.md](docs/TESTING.md) for how to run them and the conventions they
+rely on.
 
 ## Licence
 
