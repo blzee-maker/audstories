@@ -37,7 +37,7 @@ class TestNarrationSegmentsWiring:
                 ],
             },
         }
-        clips = build_voice_clips(scene, {})
+        clips = build_voice_clips(scene, {}, project_type="audiobook")
         narrator_clips = clips["narrator"]
         assert narrator_clips[0].segment_type == "action"
         assert narrator_clips[0].has_sound_event is True
@@ -51,7 +51,7 @@ class TestNarrationSegmentsWiring:
                 "dialogue_turns": [],
             },
         }
-        clips = build_voice_clips(scene, {})
+        clips = build_voice_clips(scene, {}, project_type="audiobook")
         assert clips["narrator"][0].segment_type is None
         assert clips["narrator"][0].has_sound_event is None
 
@@ -63,7 +63,7 @@ class TestNarrationSegmentsWiring:
                 "narration_segments": [],
             },
         }
-        clips = build_voice_clips(scene, {})
+        clips = build_voice_clips(scene, {}, project_type="audiobook")
         assert clips["narrator"][0].segment_type is None
 
     def test_partial_match_via_substring(self):
@@ -76,7 +76,7 @@ class TestNarrationSegmentsWiring:
                 ],
             },
         }
-        clips = build_voice_clips(scene, {})
+        clips = build_voice_clips(scene, {}, project_type="audiobook")
         assert clips["narrator"][0].segment_type == "action"
         assert clips["narrator"][0].has_sound_event is True
 
@@ -92,7 +92,7 @@ class TestNarrationSegmentsWiring:
                 ],
             },
         }
-        clips = build_voice_clips(scene, {})
+        clips = build_voice_clips(scene, {}, project_type="audiobook")
         assert clips["narrator"][0].segment_type == "inner_thought"
 
 

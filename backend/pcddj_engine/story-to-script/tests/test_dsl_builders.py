@@ -39,8 +39,11 @@ class TestSanitizeTrackId:
 
 class TestBuildTracks:
     def test_narrator_always_present(self):
+        # Narrator behaviour is the audiobook contract. build_tracks/build_voice_clips
+        # default to project_type="audio_drama", where narration is silent and voices
+        # are per character - see _build_audiodrama_voice_clips.
         plan = {"scenes": []}
-        tracks = build_tracks(plan)
+        tracks = build_tracks(plan, project_type="audiobook")
         ids = [t.id for t in tracks]
         assert "narrator" in ids
 
@@ -111,7 +114,7 @@ class TestBuildVoiceClips:
                 "dialogue_turns": [],
             },
         }
-        clips = build_voice_clips(scene, {})
+        clips = build_voice_clips(scene, {}, project_type="audiobook")
         assert "narrator" in clips
         assert len(clips["narrator"]) == 2
 
@@ -137,7 +140,7 @@ class TestBuildVoiceClips:
                 ],
             },
         }
-        clips = build_voice_clips(scene, {})
+        clips = build_voice_clips(scene, {}, project_type="audiobook")
         assert "narrator" in clips
         # Should NOT create a separate character track for indirect speech
         assert all(k == "narrator" for k in clips)
@@ -146,7 +149,8 @@ class TestBuildVoiceClips:
 class TestBuildMusicClips:
     def test_returns_music_key(self):
         scene = {"interpretation": {"primary_emotion": "joy"}}
-        clips = build_music_clips(scene, 0.5)
+        # `loop` is only set for background music; the compiler always passes a position.
+        clips = build_music_clips(scene, 0.5, position="background")
         assert "music" in clips
         assert len(clips["music"]) == 1
         assert clips["music"][0].loop is True

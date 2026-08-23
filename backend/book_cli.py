@@ -52,7 +52,11 @@ _SAFE_PROJECT_ID = re.compile(r"[^a-zA-Z0-9_-]+")
 def _sanitize_project_id(project_id: str) -> str:
     cleaned = _SAFE_PROJECT_ID.sub("_", project_id.strip())
     cleaned = cleaned.strip("._-")
-    return cleaned or "untitled_project"
+    # Lower-cased so slugs are stable on case-sensitive filesystems: a project
+    # created as "Episode Two" must resolve identically on Windows and Linux.
+    # All three copies of this helper (book_cli, drama_cli, run_pipeline) must
+    # agree, or a project created by one will not be found by another.
+    return cleaned.lower() or "untitled_project"
 
 
 def _ensure_import_path() -> None:

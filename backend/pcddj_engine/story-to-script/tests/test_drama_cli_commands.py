@@ -34,7 +34,7 @@ def test_chapter_management_and_dry_run_parse(tmp_path: Path):
     )
     assert init.returncode == 0, f"{init.stdout}\n{init.stderr}"
 
-    project_id = "Test_Drama"
+    project_id = "test_drama"   # slugs are lower-cased for case-sensitive filesystems
     project_root = projects_root / project_id
     assert (project_root / "book_metadata.json").is_file()
 
@@ -95,7 +95,7 @@ def test_dry_run_parse_unknown_chapter_fails(tmp_path: Path):
         cwd=str(_repo_root()),
     )
     assert init.returncode == 0
-    project_id = "Sample"
+    project_id = "sample"
     bad = subprocess.run(
         base_cmd + ["dry-run-parse", "--project-id", project_id, "--chapter", "missing_slug"],
         text=True,
@@ -121,7 +121,7 @@ def test_gita_commands_init_show_update(tmp_path: Path):
         cwd=str(_repo_root()),
     )
     assert init.returncode == 0, f"{init.stdout}\n{init.stderr}"
-    project_id = "Series_One"
+    project_id = "series_one"
 
     gita_init = subprocess.run(
         base_cmd + ["gita-init", "--project-id", project_id],
