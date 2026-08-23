@@ -188,7 +188,7 @@ def cmd_init(args: argparse.Namespace) -> int:
                 print("Aborted.")
                 return 1
 
-    if getattr(_args, "template", False):
+    if getattr(args, "template", False):
         body = _FOUNTAIN_TEMPLATE.strip()
         print("Using built-in Fountain starter template.")
     else:
