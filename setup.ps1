@@ -33,7 +33,13 @@ function Invoke-Step {
     if ($code -ne 0) { Fatal "$What failed (exit code $code). See output above." }
 }
 
-$RepoRoot = $PSScriptRoot
+$RepoRoot     = $PSScriptRoot
+$BackendRoot  = Join-Path $RepoRoot "backend"
+$FrontendRoot = Join-Path $RepoRoot "frontend"
+
+if (-not (Test-Path $BackendRoot)) {
+    Fatal "Expected a 'backend' folder next to this script. Run setup.ps1 from the repo root."
+}
 
 # --- 1. Python version check --------------------------------------------------
 Info "Checking Python version..."
@@ -78,19 +84,19 @@ Info "Upgrading pip..."
 Invoke-Step "pip upgrade" { & $PythonExe -m pip install --upgrade pip }
 
 Info "Installing API + engine dependencies..."
-Invoke-Step "Core API deps" { & $PythonExe -m pip install -r (Join-Path $RepoRoot "requirements.txt") }
+Invoke-Step "Core API deps" { & $PythonExe -m pip install -r (Join-Path $BackendRoot "requirements.txt") }
 Ok "Core API deps installed"
 
 Info "Installing story-processing (NLP) dependencies..."
-Invoke-Step "NLP deps" { & $PythonExe -m pip install -r (Join-Path $RepoRoot "pcddj_engine\story-to-script\requirements.txt") }
+Invoke-Step "NLP deps" { & $PythonExe -m pip install -r (Join-Path $BackendRoot "pcddj_engine\story-to-script\requirements.txt") }
 Ok "NLP deps installed"
 
 Info "Installing narration TTS dependencies..."
-Invoke-Step "TTS deps" { & $PythonExe -m pip install -r (Join-Path $RepoRoot "narration_tts\requirements.txt") }
+Invoke-Step "TTS deps" { & $PythonExe -m pip install -r (Join-Path $BackendRoot "narration_tts\requirements.txt") }
 Ok "TTS deps installed"
 
 Info "Installing audio engine dependencies..."
-Invoke-Step "Audio engine deps" { & $PythonExe -m pip install -r (Join-Path $RepoRoot "audio_engine\requirements.txt") }
+Invoke-Step "Audio engine deps" { & $PythonExe -m pip install -r (Join-Path $BackendRoot "audio_engine\requirements.txt") }
 Ok "Audio engine deps installed"
 
 # Editable-install the three in-repo packages so they are importable as real
@@ -100,9 +106,9 @@ Ok "Audio engine deps installed"
 # its parent dir on sys.path). --no-deps because every dependency is already
 # installed above and we must not let pip re-resolve the numpy/scipy pins.
 Info "Registering in-repo engine packages (editable)..."
-Invoke-Step "audio_engine (editable)" { & $PythonExe -m pip install -e (Join-Path $RepoRoot "audio_engine") --no-deps }
-Invoke-Step "asset_engine (editable)" { & $PythonExe -m pip install -e (Join-Path $RepoRoot "asset_engine") --no-deps }
-Invoke-Step "story-to-script (editable)" { & $PythonExe -m pip install -e (Join-Path $RepoRoot "pcddj_engine\story-to-script") --no-deps }
+Invoke-Step "audio_engine (editable)" { & $PythonExe -m pip install -e (Join-Path $BackendRoot "audio_engine") --no-deps }
+Invoke-Step "asset_engine (editable)" { & $PythonExe -m pip install -e (Join-Path $BackendRoot "asset_engine") --no-deps }
+Invoke-Step "story-to-script (editable)" { & $PythonExe -m pip install -e (Join-Path $BackendRoot "pcddj_engine\story-to-script") --no-deps }
 Ok "Engine packages registered"
 
 # --- 5. Download spaCy language models -----------------------------------------
@@ -113,25 +119,41 @@ Ok "Engine packages registered"
 #                              (pcddj_engine/story-to-script/tests/conftest.py)
 # Installing only the large model leaves the test suite erroring with
 # OSError [E050] "Can't find model 'en_core_web_sm'".
-Info "Downloading spaCy English model (en_core_web_lg, ~560 MB - takes a minute)..."
-Invoke-Step "spaCy lg model download" { & $PythonExe -m spacy download en_core_web_lg }
-Info "Downloading spaCy English model (en_core_web_sm, ~12 MB - used by the tests)..."
-Invoke-Step "spaCy sm model download" { & $PythonExe -m spacy download en_core_web_sm }
+#
+# Each download is skipped when the model already imports. Re-running setup.ps1
+# is common, and re-fetching 560 MB every time is slow and gives the download an
+# extra chance to fail on a truncated transfer ("Wheel ... is invalid").
+function Install-SpacyModel {
+    param(
+        [Parameter(Mandatory = $true)][string]$Name,
+        [Parameter(Mandatory = $true)][string]$Size
+    )
+    & $PythonExe -c "import $Name" 2>$null
+    if ($LASTEXITCODE -eq 0) {
+        Info "spaCy model $Name already installed - skipping download."
+        return
+    }
+    Info "Downloading spaCy English model ($Name, $Size)..."
+    Invoke-Step "spaCy $Name download" { & $PythonExe -m spacy download $Name }
+}
+
+Install-SpacyModel -Name "en_core_web_lg" -Size "~560 MB, takes a minute"
+Install-SpacyModel -Name "en_core_web_sm" -Size "~12 MB, used by the tests"
 Ok "spaCy models ready"
 
 # --- 6. Seed .env files if missing --------------------------------------------
-$BackendEnv  = Join-Path $RepoRoot ".env"
-$FrontendEnv = Join-Path $RepoRoot "..\AS UI\audstories-ui\.env"
+$BackendEnv  = Join-Path $BackendRoot ".env"
+$FrontendEnv = Join-Path $FrontendRoot ".env"
 
 if (-not (Test-Path $BackendEnv)) {
-    Copy-Item (Join-Path $RepoRoot ".env.example") $BackendEnv
+    Copy-Item (Join-Path $BackendRoot ".env.example") $BackendEnv
     Warn ".env created from .env.example - fill in your Supabase + Gemini keys before starting."
 } else {
     Info "Backend .env already exists."
 }
 
 if (-not (Test-Path $FrontendEnv)) {
-    Copy-Item (Join-Path $RepoRoot "..\AS UI\audstories-ui\.env.example") $FrontendEnv
+    Copy-Item (Join-Path $FrontendRoot ".env.example") $FrontendEnv
     Warn "Frontend .env created from .env.example - fill in your Supabase keys before starting."
 } else {
     Info "Frontend .env already exists."
@@ -144,17 +166,20 @@ Write-Host " Setup complete. Next steps:" -ForegroundColor Cyan
 Write-Host "===============================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host " 1. Run schema.sql in Supabase Dashboard -> SQL Editor"
-Write-Host " 2. Fill in c:\AS\.env  (Supabase + Gemini keys)"
-Write-Host " 3. Fill in 'c:\AS UI\audstories-ui\.env'  (Supabase keys)"
+Write-Host " 2. Fill in backend\.env   (Supabase + Gemini keys)"
+Write-Host " 3. Fill in frontend\.env  (Supabase keys)"
 Write-Host ""
-Write-Host " Start backend (always activate the venv first):"
+Write-Host " Start backend (activate the venv first, and run from backend\):"
 Write-Host "   .venv\Scripts\Activate.ps1"
+Write-Host "   cd backend"
 Write-Host "   uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload"
 Write-Host ""
 Write-Host " Start frontend (separate terminal):"
-Write-Host "   cd 'c:\AS UI\audstories-ui'"
+Write-Host "   cd frontend"
 Write-Host "   npm install"
 Write-Host "   npm run dev"
 Write-Host ""
 Write-Host " Then open http://localhost:5173 in your browser."
+Write-Host ""
+Write-Host " Run the tests:  see docs\TESTING.md"
 Write-Host ""
