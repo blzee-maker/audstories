@@ -18,6 +18,33 @@ React SPA  →  FastAPI  →  subprocess CLIs  →  processing engines  →  WAV
 
 ---
 
+## Quick start
+
+You need a [Gemini API key](https://aistudio.google.com/app/apikey) for story analysis
+and TTS. You do **not** need a Supabase account to try the pipeline.
+
+### With Docker
+
+```bash
+cp backend/.env.example backend/.env
+# set AS_DEV_NO_AUTH=1 and GEMINI_API_KEY in backend/.env
+docker compose up --build
+```
+
+Then open **<http://localhost:8000/docs>** and drive the pipeline from there — create a
+project, run Stage 1, generate voices, render Stage 2.
+
+### Without Docker
+
+```bash
+./setup.sh          # macOS / Linux
+.\setup.ps1         # Windows
+```
+
+Both need Python 3.13+, Node 18+, and FFmpeg on PATH. Full detail in [SETUP.md](SETUP.md).
+
+---
+
 ## Repository layout
 
 | Path | Contents |

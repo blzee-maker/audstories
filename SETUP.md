@@ -2,14 +2,41 @@
 
 ## Prerequisites
 
-| Tool | Version | Install |
-|---|---|---|
-| Python | 3.13+ | [python.org](https://python.org) |
-| Node.js | 18+ | [nodejs.org](https://nodejs.org) |
-| FFmpeg | any | `winget install Gyan.FFmpeg` |
-| Git | any | [git-scm.com](https://git-scm.com) |
+> Using Docker instead? None of these are needed — skip to **Shortcut — Docker** below.
+
+| Tool | Version | Windows | macOS | Linux |
+|---|---|---|---|---|
+| Python | 3.13+ | [python.org](https://python.org) | `brew install python@3.13` | your package manager |
+| Node.js | 18+ | [nodejs.org](https://nodejs.org) | `brew install node` | your package manager |
+| FFmpeg | any | `winget install Gyan.FFmpeg` | `brew install ffmpeg` | `sudo apt install ffmpeg` |
+| Git | any | [git-scm.com](https://git-scm.com) | `brew install git` | your package manager |
 
 > **FFmpeg is required for audio rendering (Stage 2).** Without it, `pydub` will fail silently when trying to mix tracks. Install it and make sure `ffmpeg` is on your PATH before testing.
+
+---
+
+## Shortcut — Docker
+
+If you have Docker, this is the least error-prone path. It needs no Python, no Node,
+no FFmpeg install, and sidesteps the editable-install requirement described below.
+
+```bash
+cp backend/.env.example backend/.env
+# set AS_DEV_NO_AUTH=1 and GEMINI_API_KEY in backend/.env
+docker compose up --build
+```
+
+Open <http://localhost:8000/docs>. Rendered audio and the job database live in a named
+volume, so they survive `docker compose down`.
+
+The web UI is behind a profile because it needs Supabase (see the next section):
+
+```bash
+docker compose --profile ui up --build
+```
+
+> First build downloads PyTorch and a 560 MB spaCy model, so expect it to take a while.
+> Later builds reuse those layers unless a `requirements.txt` changes.
 
 ---
 
@@ -80,7 +107,13 @@ The Supabase URL and anon key are the same values in both files.
 
 ## Step 4 — Run the setup script
 
-From the repo root in PowerShell:
+macOS / Linux:
+
+```bash
+./setup.sh
+```
+
+Windows, from the repo root in PowerShell:
 
 ```powershell
 .\setup.ps1

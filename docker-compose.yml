@@ -1,0 +1,59 @@
+# AudStories — local evaluation stack.
+#
+#   docker compose up --build
+#
+# Then open http://localhost:8000/docs
+#
+# The quickest way to see the pipeline work is with no accounts at all:
+#   1. cp backend/.env.example backend/.env
+#   2. Set AS_DEV_NO_AUTH=1 and GEMINI_API_KEY in it
+#   3. docker compose up --build
+#   4. Drive the API from http://localhost:8000/docs
+#
+# The `web` service is optional and only useful if you have a Supabase project:
+# several frontend pages read and write its projects/units tables directly, so
+# the UI cannot run without one. Start it with:
+#   docker compose --profile ui up --build
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: audstories-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: backend/.env
+        required: false
+    environment:
+      # Containerised runs are local-only by definition here; these defaults keep
+      # the dev auth bypass's origin guard satisfied. Override in backend/.env.
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+      AS_WORKSPACE_DIR: /data/workspace
+    volumes:
+      # Rendered audio and the SQLite job store survive `docker compose down`.
+      - audstories-workspace:/data/workspace
+    restart: unless-stopped
+
+  web:
+    profiles: ["ui"]
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: audstories-web
+    ports:
+      - "5173:5173"
+    env_file:
+      - path: frontend/.env
+        required: false
+    environment:
+      # The browser talks to the API on the host, not over the compose network,
+      # so this must be a host-reachable URL rather than http://api:8000.
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  audstories-workspace:
