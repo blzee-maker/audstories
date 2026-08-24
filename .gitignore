@@ -64,8 +64,9 @@ output/
 backend/output/
 backend/audio_engine/output/
 
-# Generated audio. The checked-in fixtures and example library are
-# force-added below, since everything else of these types is output.
+# Generated audio, plus any media you drop into the example asset library —
+# bring-your-own media stays local and is never committed. Only the two
+# project-owned files listed in CREDITS.md are force-added below.
 *.wav
 *.mp3
 *.flac
@@ -73,8 +74,7 @@ backend/audio_engine/output/
 *.m4a
 *.mpeg
 !backend/audio_engine/audio/music/Days.mp3
-!examples/asset-library/**/*.mp3
-!examples/asset-library/**/*.wav
+!examples/asset-library/voice/scene_000_scene_1_narrator/clip_000/voice.wav
 
 # ---------------------------------------------------------------
 # Editors / OS
