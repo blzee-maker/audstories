@@ -10,6 +10,8 @@ from urllib.request import Request, urlopen
 from fastapi import Depends, Header, HTTPException, status
 from jose import JWTError, jwt
 
+from .config import DEV_NO_AUTH, DEV_NO_AUTH_USER_ID
+
 
 JWKS_CACHE_TTL_SECONDS = 300
 
@@ -101,6 +103,11 @@ def _validate_with_supabase_userinfo(token: str, supabase_url: str, anon_key: st
 
 
 def require_user(authorization: str | None = Header(default=None)) -> str:
+    # Development-only bypass. DEV_NO_AUTH is False unless AS_DEV_NO_AUTH is set
+    # AND every CORS origin is local - see the guard in api/config.py.
+    if DEV_NO_AUTH:
+        return DEV_NO_AUTH_USER_ID
+
     token = _resolve_bearer_token(authorization)
 
     try:

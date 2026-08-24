@@ -38,8 +38,12 @@ being worked through in order:
 
 - Setup is currently **Windows-only** (`setup.ps1`). Cross-platform support and a
   container image are planned.
-- Running the pipeline currently requires **a Supabase project** and **a Gemini API
-  key**. A no-account development mode is planned.
+- The **React frontend requires a Supabase project** — several pages read and write
+  its `projects`/`units` tables directly.
+- The **API does not**: set `AS_DEV_NO_AUTH=1` in `backend/.env` and you can drive the
+  whole pipeline from <http://localhost:8000/docs> with no account and no sign-in.
+  You still need a `GEMINI_API_KEY` for story analysis and TTS. See
+  [SETUP.md](SETUP.md) for the shortcut path.
 
 All five test suites pass — 391 tests, about a minute for the backend. See
 [docs/TESTING.md](docs/TESTING.md) for how to run them and the conventions they

@@ -1,11 +1,20 @@
 from __future__ import annotations
 
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .config import PROJECTS_ROOT, cors_origins  # noqa: F401 — PROJECTS_ROOT re-exported for tests/back-compat
+from .config import DEV_NO_AUTH, PROJECTS_ROOT, cors_origins  # noqa: F401 — PROJECTS_ROOT re-exported for tests/back-compat
 from .deps import store, worker  # noqa: F401 — re-exported for tests/back-compat
 from .routes import assets, output, pipeline, projects, script
+
+if DEV_NO_AUTH:
+    logging.getLogger("uvicorn.error").warning(
+        "AS_DEV_NO_AUTH is enabled: every request is treated as an authenticated "
+        "local user and NO credentials are checked. Never expose this process to a "
+        "network you do not control."
+    )
 
 app = FastAPI(title="AS FastAPI bridge", version="0.1.0")
 app.add_middleware(

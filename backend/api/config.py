@@ -40,3 +40,47 @@ def cors_origins() -> list[str]:
             "http://127.0.0.1:5174",
         ]
     return origins
+
+
+# --- Development-only auth bypass ---------------------------------------------
+# Every route is authenticated against Supabase, which means evaluating this
+# project normally requires creating a Supabase project first. AS_DEV_NO_AUTH
+# lets someone run the whole pipeline locally before deciding to do that.
+#
+# The API itself needs Supabase ONLY for auth - projects and jobs live in the
+# local SQLite store - so disabling auth leaves a fully functional pipeline.
+#
+# This is a loaded footgun, so it is fenced: it refuses to activate if any CORS
+# origin is non-local, which is the best available signal that the process is
+# serving something other than the developer's own machine. The check runs at
+# import time so a misconfigured deployment fails at startup rather than silently
+# serving unauthenticated requests.
+DEV_NO_AUTH_USER_ID = "dev-local-user"
+
+_TRUTHY = {"1", "true", "yes", "on"}
+_LOCAL_HOSTS = ("localhost", "127.0.0.1", "[::1]", "0.0.0.0")
+
+
+def _is_local_origin(origin: str) -> bool:
+    host = origin.split("://", 1)[-1].split("/", 1)[0]
+    host = host.rsplit(":", 1)[0] if host.count(":") == 1 else host
+    return host in _LOCAL_HOSTS
+
+
+def dev_no_auth_enabled() -> bool:
+    """True when the auth bypass is requested AND safe to honour."""
+    if (os.environ.get("AS_DEV_NO_AUTH") or "").strip().lower() not in _TRUTHY:
+        return False
+    remote = [o for o in cors_origins() if not _is_local_origin(o)]
+    if remote:
+        raise RuntimeError(
+            "AS_DEV_NO_AUTH is set, but CORS_ORIGINS contains non-local origins: "
+            f"{', '.join(remote)}. The auth bypass is for local development only "
+            "and will not be enabled for a deployment that serves remote origins. "
+            "Unset AS_DEV_NO_AUTH, or restrict CORS_ORIGINS to localhost."
+        )
+    return True
+
+
+# Evaluate once at import so misconfiguration is a startup failure.
+DEV_NO_AUTH = dev_no_auth_enabled()

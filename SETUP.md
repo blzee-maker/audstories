@@ -13,6 +13,29 @@
 
 ---
 
+## Shortcut — try the pipeline without a Supabase account
+
+Steps 1 and 3 exist to set up authentication. If you only want to see the pipeline
+work, you can skip them:
+
+1. Run `setup.ps1` (Step 4).
+2. Put `AS_DEV_NO_AUTH=1` and your `GEMINI_API_KEY` in `backend/.env`.
+3. Start the backend (Step 5) and open **<http://localhost:8000/docs>**.
+
+That gives you the full API — create a project, run Stage 1, generate voices, render
+Stage 2 — with no account and no sign-in. The API uses Supabase only for auth;
+projects and jobs live in a local SQLite database.
+
+**The React frontend is not covered by this.** Several of its pages read and write
+the Supabase `projects`/`units` tables directly, so the UI still needs a real
+Supabase project. Use `/docs` or the CLIs in `backend/` for the no-account path.
+
+`AS_DEV_NO_AUTH` disables authentication completely. The server refuses to start
+with it set if `CORS_ORIGINS` names any non-local origin, but never enable it on a
+machine reachable from a network you do not control.
+
+---
+
 ## Step 1 — Supabase project
 
 1. Create a free project at [supabase.com](https://supabase.com).
@@ -34,7 +57,7 @@ This is used for story NLP analysis (Stage 1) and TTS voice synthesis.
 
 ## Step 3 — Fill in environment files
 
-**Backend** — copy and fill in `c:\AS\.env`:
+**Backend** — copy and fill in `backend/.env`:
 
 ```
 SUPABASE_URL=https://xxxx.supabase.co
@@ -43,7 +66,7 @@ SUPABASE_JWT_SECRET=...
 GEMINI_API_KEY=...
 ```
 
-**Frontend** — copy and fill in `c:\AS UI\audstories-ui\.env`:
+**Frontend** — copy and fill in `frontend/.env`:
 
 ```
 VITE_SUPABASE_URL=https://xxxx.supabase.co
@@ -77,11 +100,12 @@ This will:
 
 ## Step 5 — Start the backend
 
-**Always activate the venv before starting the server.** The pipeline subprocesses inherit the active Python, so activating once is enough.
+Activate the venv, then start the server **from `backend/`** — `api.main` is only importable from there.
 
 ```powershell
-# From c:\AS
+# From the repo root
 .venv\Scripts\Activate.ps1
+cd backend
 uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
@@ -97,7 +121,7 @@ INFO:     Application startup complete.
 In a separate terminal (no venv needed here):
 
 ```powershell
-cd "c:\AS UI\audstories-ui"
+cd frontend
 npm install        # first time only
 npm run dev
 ```
