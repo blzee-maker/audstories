@@ -1,43 +1,67 @@
 # AudStories
 
-AI-powered audio production platform. Turns story text into finished audio in two
-modes — **audiobook** and **audio drama**.
+Turn a story into finished audio. AudStories takes prose or a Fountain script, works out
+what it should sound like, and renders a mixed, loudness-normalised WAV — as an
+**audiobook** (a narrator reads everything) or an **audio drama** (characters speak, and
+description becomes sound rather than narration).
 
-The pipeline runs: story text → NLP/AI analysis → Fountain script → asset requirements
-→ TTS synthesis → DSP/audio rendering → WAV output.
-
-```
-React SPA  →  FastAPI  →  subprocess CLIs  →  processing engines  →  WAV
-```
-
----
-
-> **🚧 This README is a placeholder.** It is written in full at Stage 4 of the release
-> plan, with an architecture diagram, screenshots, a demo audio sample, and a verified
-> quickstart. What follows is the minimum needed to orient someone reading the code today.
+[![Licence](https://img.shields.io/badge/licence-Apache--2.0-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](https://python.org)
+[![Tests](https://img.shields.io/badge/tests-391%20passing-brightgreen.svg)](docs/TESTING.md)
 
 ---
 
-## Quick start
+## The pipeline
 
-### Hear it work — no keys, no accounts
+![AudStories pipeline: story text through analysis, asset provisioning and render to final.wav](docs/images/pipeline.png)
 
-After installing (below), this renders audio using the one fixture in the repo:
+Work happens in two stages with a deliberate pause between them. **Stage 1** analyses the
+story and tells you what audio it needs. You then supply that audio — generated voices,
+your own recordings, or music and effects from your library. **Stage 2** resolves what you
+provided into a timeline and renders it.
+
+That pause is the point: you decide what the piece sounds like, rather than accepting
+whatever a model picks.
+
+## Architecture
+
+![AudStories architecture: React SPA through uvicorn and FastAPI to the pipeline worker and four engines, with SQLite, workspace files, Supabase and Gemini](docs/images/architecture.png)
+
+The API is a thin layer. It authenticates, records job state in SQLite, and hands work to
+a single-threaded worker that runs each pipeline stage as a subprocess. The four engines
+do the real work and are independently testable:
+
+| Engine | Responsibility |
+|---|---|
+| [`story_processing`](backend/pcddj_engine/story-to-script/) | spaCy + Gemini analysis, Fountain parsing, narrative plan |
+| [`asset_engine`](backend/asset_engine/) | Asset requirements, library resolution, pacing rules |
+| [`narration_tts`](backend/narration_tts/) | Gemini TTS voice synthesis |
+| [`audio_engine`](backend/audio_engine/) | Timeline rendering, EQ, ducking, fades, loudness |
+
+Supabase is used **only** for authentication; all project and job state is local SQLite.
+Gemini is the only other external dependency.
+
+## Hear it
+
+[**docs/audio/render-demo.mp3**](docs/audio/render-demo.mp3) — 15 seconds of the audio
+engine's output, rendered from the one music fixture in this repository with its gain,
+fade and loudness stages applied.
+
+It is a render demo, not a finished drama: no third-party voice, ambience or SFX is
+committed here, so there is nothing to mix against. Reproduce it yourself with:
 
 ```bash
 python examples/render_demo.py
 ```
 
-It exercises timeline parsing, gain staging, fades and loudness normalisation, and
-writes a 30-second WAV to `examples/output/`. It needs FFmpeg and the project's
-dependencies — nothing else. This is the fastest way to confirm your install is good.
+That needs FFmpeg and the project's dependencies — **no API keys and no accounts** — and
+is the fastest way to confirm an install is working.
 
-### Run the pipeline
+---
 
-You need a [Gemini API key](https://aistudio.google.com/app/apikey) for story analysis
-and TTS. You do **not** need a Supabase account to try the pipeline.
+## Quick start
 
-### With Docker
+### Docker
 
 ```bash
 cp backend/.env.example backend/.env
@@ -45,17 +69,22 @@ cp backend/.env.example backend/.env
 docker compose up --build
 ```
 
-Then open **<http://localhost:8000/docs>** and drive the pipeline from there — create a
-project, run Stage 1, generate voices, render Stage 2.
+Open **<http://localhost:8000/docs>** and drive the pipeline from there: create a project,
+run Stage 1, generate voices, render Stage 2. No sign-in, no Supabase project.
 
-### Without Docker
+> The first build pulls PyTorch and a 560 MB spaCy model, so give it a while.
+
+### Native
 
 ```bash
 ./setup.sh          # macOS / Linux
 .\setup.ps1         # Windows
 ```
 
-Both need Python 3.13+, Node 18+, and FFmpeg on PATH. Full detail in [SETUP.md](SETUP.md).
+Needs Python 3.13+, Node 18+, and FFmpeg on PATH. Full walkthrough in [SETUP.md](SETUP.md).
+
+You need a [Gemini API key](https://aistudio.google.com/app/apikey) for story analysis and
+TTS. You do **not** need a Supabase account unless you want the web UI.
 
 ---
 
@@ -67,34 +96,36 @@ Both need Python 3.13+, Node 18+, and FFmpeg on PATH. Full detail in [SETUP.md](
 | `backend/asset_engine/` | Requirements extraction, asset resolution, pacing rules |
 | `backend/audio_engine/` | DSP, timeline renderer, loudness |
 | `backend/pcddj_engine/story-to-script/` | NLP pipeline, Fountain DSL, narrative plan |
-| `backend/narration_tts/` | Gemini Flash TTS synthesis |
+| `backend/narration_tts/` | Gemini TTS synthesis |
 | `frontend/` | React + Vite single-page app |
 | `docs/` | Engine and pipeline documentation |
-| `examples/` | Sample Fountain scripts and an example asset library |
+| `examples/` | Sample Fountain scripts, the render demo, an example asset library |
 
-## Status
+## Status and known limits
 
-This repository is mid-migration from a local working tree. Known gaps, tracked and
-being worked through in order:
+Honest about where this is:
 
-- The **React frontend requires a Supabase project** — several pages read and write
-  its `projects`/`units` tables directly.
-- The **API does not**: set `AS_DEV_NO_AUTH=1` in `backend/.env` and you can drive the
-  whole pipeline from <http://localhost:8000/docs> with no account and no sign-in.
-  You still need a `GEMINI_API_KEY` for story analysis and TTS. See
-  [SETUP.md](SETUP.md) for the shortcut path.
+- **The React frontend requires a Supabase project.** Several pages read and write its
+  `projects`/`units` tables directly, so the UI cannot run without one. Moving that
+  storage behind the API is the obvious next step.
+- **The API does not.** Set `AS_DEV_NO_AUTH=1` in `backend/.env` and the whole pipeline is
+  drivable from `/docs` with no account. That flag disables authentication entirely and
+  refuses to start if `CORS_ORIGINS` names any non-local origin.
+- **The job queue is in-process.** State survives restarts, but work is not distributed;
+  a real broker would be needed to scale past one server.
+- **No screenshots yet** — they need a live Supabase project to capture.
 
-Setup is verified on **Windows** (`setup.ps1`), **Linux** (`setup.sh`, exercised from a
-clean container against a fresh clone) and **Docker**. The renderer produces
-byte-identical output on all three.
+Setup is verified on **Windows** (`setup.ps1`), **Linux** (`setup.sh`, exercised in a clean
+container against a fresh clone) and **Docker**. The renderer produces byte-identical
+output on all three.
 
-All five test suites pass — 391 tests, about a minute for the backend. See
-[docs/TESTING.md](docs/TESTING.md) for how to run them and the conventions they
-rely on.
+All five test suites pass — **391 tests**, about a minute for the backend. See
+[docs/TESTING.md](docs/TESTING.md).
 
 ## Licence
 
 Apache-2.0 — see [LICENSE](LICENSE).
 
-Audio assets are licensed separately and individually; see [CREDITS.md](CREDITS.md).
-That file is **incomplete** and must be finished before this repository is made public.
+Audio assets are licensed separately and listed individually in [CREDITS.md](CREDITS.md).
+Every audio file committed here originates with the project; none is required to build or
+run it.
