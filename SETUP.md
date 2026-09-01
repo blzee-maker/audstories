@@ -165,9 +165,21 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ## Smoke test
 
+### Fastest check — no keys, no accounts, no UI
+
+```bash
+python examples/render_demo.py
+```
+
+Renders a 30-second WAV into `examples/output/` using the audio fixture in the repo.
+If this works, your Python environment, the editable engine installs, and FFmpeg are
+all correct — which is most of what can go wrong during setup.
+
+### Full pipeline
+
 1. Sign up for an account.
 2. Create a new **Audio Drama** project.
-3. Paste or upload a `.fountain` script. Two ready-made examples live in the repo root: [`missing.fountain`](missing.fountain) (single scene, two characters) and [`trailer.fountain`](trailer.fountain) (four scenes, multiple characters — exercises more of the pipeline).
+3. Paste or upload a `.fountain` script. Two ready-made examples live in [`examples/`](examples/): [`missing.fountain`](examples/missing.fountain) (single scene, two characters) and [`trailer.fountain`](examples/trailer.fountain) (four scenes, multiple characters — exercises more of the pipeline).
 4. Click **Run Stage 1** — wait for `awaiting_assets` status.
 5. In the Voice panel, click **Generate All** to run TTS.
 6. Once all voice clips are ready, click **Run Stage 2**.

@@ -20,6 +20,20 @@ React SPA  →  FastAPI  →  subprocess CLIs  →  processing engines  →  WAV
 
 ## Quick start
 
+### Hear it work — no keys, no accounts
+
+After installing (below), this renders audio using the one fixture in the repo:
+
+```bash
+python examples/render_demo.py
+```
+
+It exercises timeline parsing, gain staging, fades and loudness normalisation, and
+writes a 30-second WAV to `examples/output/`. It needs FFmpeg and the project's
+dependencies — nothing else. This is the fastest way to confirm your install is good.
+
+### Run the pipeline
+
 You need a [Gemini API key](https://aistudio.google.com/app/apikey) for story analysis
 and TTS. You do **not** need a Supabase account to try the pipeline.
 
