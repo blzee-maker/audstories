@@ -32,7 +32,7 @@ export default function SignUp() {
             setSuccess('Registration successful! Please check your email to verify your account.');
           }
         }
-      } catch (err) {
+      } catch {
         setError('An unexpected error occurred.');
       } finally {
         setLoading(false);

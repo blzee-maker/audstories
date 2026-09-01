@@ -1,0 +1,123 @@
+name: Install
+
+# The slow half of CI: proves a clean machine can actually install and render.
+# ci.yml runs the test suites on every push; this one verifies the two paths the
+# README hands to a new contributor - ./setup.sh and the Docker image - so those
+# instructions cannot rot unnoticed.
+#
+# The weekly schedule is the point of it: nothing here is pinned end to end, so a
+# new numpy, a moved spaCy model URL or a base-image change can break the install
+# without a single commit landing.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'setup.sh'
+      - 'setup.ps1'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - '**/requirements.txt'
+      - '**/pyproject.toml'
+      - 'examples/render_demo.py'
+      - '.github/workflows/install.yml'
+  schedule:
+    - cron: '0 6 * * 1'  # Mondays, 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  setup-script:
+    name: setup.sh on a clean runner
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run setup.sh
+        # Verbatim, with no arguments - exactly what SETUP.md tells a new
+        # contributor to run. It creates .venv/ and installs both spaCy models.
+        run: ./setup.sh
+
+      - name: Render the demo (no API keys, no accounts)
+        # The key-free end-to-end proof: timeline parsing, gain staging, fades
+        # and loudness normalisation against the one committed audio fixture.
+        run: .venv/bin/python examples/render_demo.py
+
+      - name: Verify the rendered audio
+        # Deliberately checks format and duration rather than a checksum. The
+        # render is byte-deterministic across platforms, but ffmpeg comes from
+        # apt and is not pinned, so an upstream decoder change would turn a
+        # checksum assertion red for something that is not a regression.
+        run: |
+          ffprobe -v error -show_entries stream=codec_name,sample_rate,channels \
+                  -show_entries format=duration -of default=nw=1 \
+                  examples/output/render_demo.wav | tee probe.txt
+          grep -qx 'codec_name=pcm_s16le' probe.txt
+          grep -qx 'sample_rate=48000'    probe.txt
+          grep -qx 'channels=2'           probe.txt
+          python - <<'PY'
+          import re, sys
+          probe = open("probe.txt").read()
+          seconds = float(re.search(r"duration=([\d.]+)", probe).group(1))
+          if not 29.0 <= seconds <= 31.0:
+              sys.exit(f"expected a ~30s render, got {seconds:.2f}s")
+          print(f"duration {seconds:.2f}s - ok")
+          PY
+
+  docker:
+    name: Docker image builds and serves
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the image
+        run: docker build -t audstories-api .
+
+      - name: Start the container
+        # AS_DEV_NO_AUTH is not needed here: /openapi.json is unauthenticated.
+        run: |
+          docker run -d --name audstories -p 8000:8000 audstories-api
+          for _ in $(seq 1 60); do
+            if curl -fsS http://localhost:8000/openapi.json -o openapi.json; then
+              echo "API is up"; exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::The API did not come up within 120s"
+          docker logs audstories
+          exit 1
+
+      - name: The API serves its routes
+        run: |
+          python - <<'PY'
+          import json, sys
+          schema = json.load(open("openapi.json"))
+          paths = schema["paths"]
+          operations = sum(len(methods) for methods in paths.values())
+          print(f"{operations} operations across {len(paths)} paths")
+          if "/api/projects" not in paths:
+              sys.exit("expected /api/projects in the served schema")
+          if operations < 15:
+              sys.exit(f"only {operations} operations served - routes are missing")
+          PY
+
+      - name: Render the demo inside the container
+        # The README tells Docker users to run exactly this to check their setup.
+        run: docker exec audstories python /app/examples/render_demo.py
+
+      - name: Container logs
+        if: always()
+        run: docker logs audstories || true

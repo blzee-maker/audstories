@@ -23,7 +23,7 @@ describe('api client', () => {
   beforeEach(() => {
     getSession.mockReset()
     getSession.mockResolvedValue({ data: { session: { access_token: 'tok-123' } }, error: null })
-    global.fetch = vi.fn()
+    globalThis.fetch = vi.fn()
   })
 
   it('targets the configured base URL', () => {

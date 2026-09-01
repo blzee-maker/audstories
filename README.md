@@ -5,9 +5,10 @@ what it should sound like, and renders a mixed, loudness-normalised WAV — as a
 **audiobook** (a narrator reads everything) or an **audio drama** (characters speak, and
 description becomes sound rather than narration).
 
+[![CI](https://github.com/blzee-maker/audstories/actions/workflows/ci.yml/badge.svg)](https://github.com/blzee-maker/audstories/actions/workflows/ci.yml)
 [![Licence](https://img.shields.io/badge/licence-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](https://python.org)
-[![Tests](https://img.shields.io/badge/tests-391%20passing-brightgreen.svg)](docs/TESTING.md)
+[![Tests](https://img.shields.io/badge/tests-427%20passing-brightgreen.svg)](docs/TESTING.md)
 
 ---
 
@@ -119,7 +120,9 @@ Setup is verified on **Windows** (`setup.ps1`), **Linux** (`setup.sh`, exercised
 container against a fresh clone) and **Docker**. The renderer produces byte-identical
 output on all three.
 
-All five test suites pass — **391 tests**, about a minute for the backend. See
+All six test suites pass — **427 tests**, about a minute for the backend. Every push
+runs them on Linux; a separate weekly job reinstalls from scratch and re-renders the
+demo, so the setup instructions cannot rot unnoticed. See
 [docs/TESTING.md](docs/TESTING.md).
 
 ## Licence

@@ -23,7 +23,7 @@ export default function SignIn() {
         } else {
           navigate('/profile');
         }
-      } catch (err) {
+      } catch {
         setError('An unexpected error occurred.');
       } finally {
         setLoading(false);

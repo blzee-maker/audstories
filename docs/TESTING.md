@@ -1,14 +1,19 @@
 # Testing
 
-All five suites pass. A full backend run takes about a minute.
+All six suites pass. A full backend run takes about a minute.
 
 | Suite | Location | Tests | Runtime |
 |---|---|---|---|
 | `asset_engine` | `backend/asset_engine` | 54 | ~1.4s |
-| `api` | `backend` (run `pytest api/`) | 2 | ~0.8s |
-| `audio_engine` | `backend/audio_engine` | 15 | ~3.7s |
-| `story-to-script` | `backend/pcddj_engine/story-to-script` | 309 | ~45s |
-| frontend | `frontend` (`npm test`) | 11 | ~27s |
+| `api` | `backend` (run `pytest api/`) | 20 | ~1.6s |
+| `audio_engine` | `backend/audio_engine` | 15 | ~8s |
+| `narration_tts` | `backend/narration_tts` | 18 | ~0.7s |
+| `story-to-script` | `backend/pcddj_engine/story-to-script` | 309 | ~55s |
+| frontend | `frontend` (`npm test`) | 11 | ~3s |
+
+**427 tests**, none of them `xfail`. There is one conditional `pytest.skip` —
+`asset_engine`'s contract test against the story-to-script sample — and it never
+fires, because the sample draft it looks for is committed.
 
 ## Running them
 
@@ -17,6 +22,7 @@ All five suites pass. A full backend run takes about a minute.
 cd backend/asset_engine                  && pytest
 cd backend                               && pytest api/
 cd backend/audio_engine                  && pytest
+cd backend/narration_tts                 && pytest
 cd backend/pcddj_engine/story-to-script  && pytest
 
 cd frontend && npm test
@@ -24,12 +30,27 @@ cd frontend && npm test
 
 ## Prerequisites
 
-- **Both spaCy models.** The runtime pipeline loads `en_core_web_lg`; the
-  story-to-script test fixture loads `en_core_web_sm`. `setup.ps1` installs both.
-  Missing the small model produces 27 errors of the form
-  `OSError [E050] Can't find model 'en_core_web_sm'`.
+- **The small spaCy model.** The test fixtures load `en_core_web_sm` explicitly.
+  `setup.ps1` and `setup.sh` install it alongside `en_core_web_lg`, which is the
+  runtime default and which no test uses. Missing the small model produces 27
+  errors of the form `OSError [E050] Can't find model 'en_core_web_sm'`.
 - **FFmpeg on PATH**, for anything that touches `pydub`.
-- No API keys are needed. Nothing in the suites calls Gemini.
+- No API keys are needed. Nothing in the suites calls Gemini — `narration_tts`
+  mocks the client rather than reaching the network.
+
+## In CI
+
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs all six suites on
+every push and pull request, each as its own step so a failure names the engine
+that broke. It installs only `en_core_web_sm`, since no test needs the 560 MB
+model.
+
+[`.github/workflows/install.yml`](../.github/workflows/install.yml) is the slow
+half: it runs `setup.sh` verbatim on a clean runner, builds the Docker image, and
+renders the demo through both. It is triggered by changes to the setup or
+dependency files, weekly on a schedule, and manually. The schedule is the point —
+the dependency set is not pinned end to end, so a new numpy or a moved spaCy model
+URL can break a fresh install with no commit landing.
 
 ## Conventions worth knowing
 
@@ -46,7 +67,7 @@ file has no test functions, it does not belong in `tests/`.
 Both matter: `cmd_init` used to ignore `--projects-root` and write to
 `workspace/projects` regardless, so the CLI tests created real projects and then
 tripped over them on later runs. After any test run, `git status` should be
-clean.
+clean — CI asserts exactly that.
 
 **Narrator behaviour is the audiobook contract.** `build_tracks` and
 `build_voice_clips` default to `project_type="audio_drama"`, where narration is
@@ -59,6 +80,6 @@ resolves identically on Windows and Linux. The helper is duplicated in
 project created by one is invisible to another.
 
 **Fountain SFX syntax is `SFX: description`,** with no brackets — see
-`docs/AUDIO_DRAMA_SCRIPT_SPEC.md`. A blank line ends a dialogue block; speech
-only resumes across a blank line when a parenthetical beat (`(then)`, `(beat)`,
-`(silence)`) interrupted it.
+[AUDIO_DRAMA_SCRIPT_SPEC.md](AUDIO_DRAMA_SCRIPT_SPEC.md). A blank line ends a
+dialogue block; speech only resumes across a blank line when a parenthetical beat
+(`(then)`, `(beat)`, `(silence)`) interrupted it.
