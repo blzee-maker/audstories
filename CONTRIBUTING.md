@@ -27,7 +27,7 @@ your install is good.
 
 ## Running the tests
 
-Six suites, 427 tests, about a minute for the backend. Commands and per-suite
+Six suites, 437 tests, about a minute for the backend. Commands and per-suite
 detail are in [docs/TESTING.md](docs/TESTING.md).
 
 CI runs all of them on every push and pull request, plus the frontend lint and a

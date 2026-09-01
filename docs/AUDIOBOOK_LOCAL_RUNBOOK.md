@@ -6,7 +6,8 @@
    - `./setup.sh` (or `setup.ps1` on Windows) from the repo root installs everything
 2. Create env file:
    - copy `.env.example` to `.env`
-   - set `SUPABASE_JWT_SECRET` and `GEMINI_API_KEY`
+   - set `SUPABASE_URL` and `GEMINI_API_KEY` (no JWT secret needed on Supabase's
+     JWT Signing Keys model — see [SETUP.md](../SETUP.md))
 3. Start FastAPI bridge:
    - `uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload`
 

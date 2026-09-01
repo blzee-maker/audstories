@@ -15,6 +15,13 @@ from .config import DEV_NO_AUTH, DEV_NO_AUTH_USER_ID
 
 JWKS_CACHE_TTL_SECONDS = 300
 
+# Asymmetric algorithms Supabase signs with under the current "JWT Signing Keys"
+# model. A token's own `alg` header is attacker-controlled, so it is checked
+# against this allowlist rather than passed straight through to jwt.decode --
+# echoing the header back as the permitted algorithm is the JWT
+# algorithm-confusion vector. Exercised with forged tokens in test_auth_jwks.py.
+ASYMMETRIC_ALGORITHMS = frozenset({"ES256", "RS256"})
+
 
 def _resolve_bearer_token(authorization: str | None) -> str:
     if not authorization:
@@ -121,6 +128,10 @@ def require_user(authorization: str | None = Header(default=None)) -> str:
     if not algorithm:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="JWT algorithm is missing")
 
+    # SUPABASE_JWT_SECRET is only consulted for HS* tokens, which Supabase issues
+    # under the LEGACY shared-secret model. Projects on the current "JWT Signing
+    # Keys" model send ES256/RS256 tokens verified against the public JWKS below,
+    # and need no secret here at all -- SUPABASE_URL is enough.
     jwt_secret = os.environ.get("SUPABASE_JWT_SECRET", "").strip()
     supabase_url = (os.environ.get("SUPABASE_URL") or os.environ.get("VITE_SUPABASE_URL") or "").strip()
     supabase_anon_key = (os.environ.get("SUPABASE_ANON_KEY") or os.environ.get("VITE_SUPABASE_ANON_KEY") or "").strip()
@@ -129,9 +140,14 @@ def require_user(authorization: str | None = Header(default=None)) -> str:
     try:
         if algorithm.startswith("HS"):
             if not jwt_secret:
-                raise JWTError("Missing SUPABASE_JWT_SECRET for HS* token verification")
+                raise JWTError(
+                    "Received a legacy HS* token but SUPABASE_JWT_SECRET is not set. "
+                    "Projects on JWT Signing Keys should send ES256/RS256 tokens instead."
+                )
             payload = _decode_with_hs256(token, jwt_secret)
         else:
+            if algorithm not in ASYMMETRIC_ALGORITHMS:
+                raise JWTError(f"Unsupported JWT algorithm: {algorithm}")
             if not supabase_url:
                 raise JWTError("Missing SUPABASE_URL for JWKS token verification")
             if not key_id:

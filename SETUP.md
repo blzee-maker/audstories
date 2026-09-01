@@ -88,20 +88,31 @@ This is used for story NLP analysis (Stage 1) and TTS voice synthesis.
 
 ```
 SUPABASE_URL=https://xxxx.supabase.co
-SUPABASE_ANON_KEY=...
-SUPABASE_JWT_SECRET=...
+SUPABASE_ANON_KEY=sb_publishable_...
 GEMINI_API_KEY=...
 ```
+
+> **No JWT secret required.** On Supabase's current *JWT Signing Keys* model, user
+> tokens are signed with an asymmetric key and the backend verifies them against
+> your project's **public** JWKS endpoint, derived from `SUPABASE_URL`. Nothing
+> secret to Supabase needs to live in `backend/.env`.
+>
+> If your project is still on the older shared secret, tokens arrive signed with
+> HS256 and you also need `SUPABASE_JWT_SECRET=...` (Dashboard → JWT Keys →
+> Legacy JWT Secret). Both paths work.
 
 **Frontend** — copy and fill in `frontend/.env`:
 
 ```
 VITE_SUPABASE_URL=https://xxxx.supabase.co
-VITE_SUPABASE_ANON_KEY=...
+VITE_SUPABASE_ANON_KEY=sb_publishable_...
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
-The Supabase URL and anon key are the same values in both files.
+The Supabase URL and publishable key are the same values in both files. The
+publishable key is public by design — it ships in the browser bundle, and the
+row-level security policies in [`schema.sql`](schema.sql) are what actually
+protect your data. Legacy `anon` keys still work in both places.
 
 ---
 
@@ -196,5 +207,6 @@ all correct — which is most of what can go wrong during setup.
 | `Can't find model 'en_core_web_lg'` | spaCy model not downloaded | Run `.venv\Scripts\python -m spacy download en_core_web_lg` |
 | `ModuleNotFoundError: No module named 'audio_engine'` during Stage 2 | Engine packages not editable-installed | Run `.venv\Scripts\python -m pip install -e audio_engine --no-deps` (or re-run `setup.ps1`) |
 | `Gemini TTS quota/rate limit reached` | Free tier quota | Wait ~60s and retry, or use a billed API key |
-| `401 Unauthorized` from backend | Stale or wrong JWT secret | Check `SUPABASE_JWT_SECRET` matches Supabase dashboard |
+| `401 Unauthorized` from backend | Backend cannot verify the token | On JWT Signing Keys: check `SUPABASE_URL` is correct and reachable — it derives the JWKS URL. On the legacy shared secret: check `SUPABASE_JWT_SECRET` matches the dashboard |
+| `401` mentioning `SUPABASE_JWT_SECRET is not set` | Project sends legacy HS256 tokens but no secret is configured | Either set `SUPABASE_JWT_SECRET`, or migrate the project to JWT Signing Keys |
 | Frontend shows blank page | `.env` not filled in | Verify `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set |

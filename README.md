@@ -8,7 +8,7 @@ description becomes sound rather than narration).
 [![CI](https://github.com/blzee-maker/audstories/actions/workflows/ci.yml/badge.svg)](https://github.com/blzee-maker/audstories/actions/workflows/ci.yml)
 [![Licence](https://img.shields.io/badge/licence-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](https://python.org)
-[![Tests](https://img.shields.io/badge/tests-427%20passing-brightgreen.svg)](docs/TESTING.md)
+[![Tests](https://img.shields.io/badge/tests-437%20passing-brightgreen.svg)](docs/TESTING.md)
 
 ---
 
@@ -41,6 +41,11 @@ do the real work and are independently testable:
 
 Supabase is used **only** for authentication; all project and job state is local SQLite.
 Gemini is the only other external dependency.
+
+On Supabase's current *JWT Signing Keys* model the backend holds **no Supabase
+secret at all** — user tokens are signed with an asymmetric key and verified against
+the project's public JWKS endpoint. Projects still on the older shared HS256 secret
+are also supported; see [SETUP.md](SETUP.md).
 
 ## Hear it
 
@@ -120,7 +125,7 @@ Setup is verified on **Windows** (`setup.ps1`), **Linux** (`setup.sh`, exercised
 container against a fresh clone) and **Docker**. The renderer produces byte-identical
 output on all three.
 
-All six test suites pass — **427 tests**, about a minute for the backend. Every push
+All six test suites pass — **437 tests**, about a minute for the backend. Every push
 runs them on Linux; a separate weekly job reinstalls from scratch and re-renders the
 demo, so the setup instructions cannot rot unnoticed. See
 [docs/TESTING.md](docs/TESTING.md).

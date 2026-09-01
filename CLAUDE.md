@@ -85,3 +85,17 @@ negation *and* a [CREDITS.md](CREDITS.md) row), or build output.
   `supabase.from(...)` directly. `AS_DEV_NO_AUTH=1` unlocks the **API** only.
 - The job queue is in-process. It survives restarts but does not distribute.
 - `python-jose` is unmaintained; `PyJWT` is the successor.
+
+## Auth
+
+`api/auth.py` verifies Supabase tokens two ways, chosen by the token's `alg`:
+
+- **ES256/RS256** — the current *JWT Signing Keys* model. Verified against the
+  project's public JWKS (derived from `SUPABASE_URL`), cached 5 minutes. **No
+  secret is configured for this path**, which is the point of it.
+- **HS256** — the legacy shared secret, needs `SUPABASE_JWT_SECRET`. Kept so
+  older projects still work; leave the variable blank otherwise.
+
+The permitted algorithm comes from `ASYMMETRIC_ALGORITHMS`, never from the
+token's own header — echoing the header back is the algorithm-confusion vector.
+`test_auth_jwks.py` asserts that with forged tokens.

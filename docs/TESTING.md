@@ -5,13 +5,13 @@ All six suites pass. A full backend run takes about a minute.
 | Suite | Location | Tests | Runtime |
 |---|---|---|---|
 | `asset_engine` | `backend/asset_engine` | 54 | ~1.4s |
-| `api` | `backend` (run `pytest api/`) | 20 | ~1.6s |
+| `api` | `backend` (run `pytest api/`) | 30 | ~1.4s |
 | `audio_engine` | `backend/audio_engine` | 15 | ~8s |
 | `narration_tts` | `backend/narration_tts` | 18 | ~0.7s |
 | `story-to-script` | `backend/pcddj_engine/story-to-script` | 309 | ~55s |
 | frontend | `frontend` (`npm test`) | 11 | ~3s |
 
-**427 tests**, none of them `xfail`. There is one conditional `pytest.skip` —
+**437 tests**, none of them `xfail`. There is one conditional `pytest.skip` —
 `asset_engine`'s contract test against the story-to-script sample — and it never
 fires, because the sample draft it looks for is committed.
 
