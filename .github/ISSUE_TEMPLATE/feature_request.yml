@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest a capability or a change in behaviour.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do
+      description: The underlying goal, not just the feature. It often has a shorter route.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you have in mind
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the system
+      options:
+        - API (FastAPI)
+        - story_processing (NLP / Fountain)
+        - asset_engine (requirements, resolution, pacing)
+        - narration_tts (voice synthesis)
+        - audio_engine (DSP / render)
+        - Frontend (React)
+        - Install / packaging
+        - Docs
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Anything you have already tried or ruled out

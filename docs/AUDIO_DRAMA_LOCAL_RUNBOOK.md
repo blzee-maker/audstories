@@ -1,8 +1,8 @@
-﻿# Audio Drama Local Runbook (Script-First to Engine 2)
+# Audio Drama Local Runbook (Script-First to Engine 2)
 
 ## 1) Create a drama project
 
-From repo root (`c:\AS`):
+From `backend/`:
 
 - Interactive script paste:
   - `python drama_cli.py init`

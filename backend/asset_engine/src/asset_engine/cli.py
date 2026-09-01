@@ -1,4 +1,4 @@
-﻿"""CLI for asset engine."""
+"""CLI for asset engine."""
 
 from __future__ import annotations
 

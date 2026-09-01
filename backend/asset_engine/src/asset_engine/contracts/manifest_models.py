@@ -1,4 +1,4 @@
-﻿"""Manifest models for traceability and debuggability."""
+"""Manifest models for traceability and debuggability."""
 
 from __future__ import annotations
 

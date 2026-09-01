@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Setup problems
+    url: https://github.com/blzee-maker/audstories/blob/main/SETUP.md
+    about: Full install walkthrough, including the FFmpeg and spaCy model steps.
+  - name: How the pipeline works
+    url: https://github.com/blzee-maker/audstories/blob/main/README.md
+    about: Architecture, the two stages, and what each engine is responsible for.

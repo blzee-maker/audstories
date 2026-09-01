@@ -1,4 +1,4 @@
-﻿"""Optional CLAP index adapter.
+"""Optional CLAP index adapter.
 
 This v1 module keeps CLAP fully optional. If model dependencies are not installed,
 runtime matching returns ``None`` and resolvers fall back to deterministic folder-first logic.

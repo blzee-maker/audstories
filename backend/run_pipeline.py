@@ -1,4 +1,4 @@
-﻿"""Two-stage pipeline orchestrator.
+"""Two-stage pipeline orchestrator.
 
 Chains Engine 1 (story -> draft), Engine 2 (asset scaffold/resolve),
 and Engine 3 (audio render) into a two-stage workflow with a human

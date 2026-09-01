@@ -2,7 +2,7 @@
 
 This document describes **Engine 1** in the PCDDJ audio storytelling pipeline: the **Story-to-Script** subsystem located under `pcddj_engine/story-to-script/`. It explains architecture, data contracts, the **DSL** layer, runtime modes, and how outputs connect to downstream engines.
 
-For a shorter operational walkthrough, see [WORKFLOW_GUIDE.md](./WORKFLOW_GUIDE.md) and the package-local [USAGE_GUIDE](../pcddj_engine/story-to-script/docs/USAGE_GUIDE.md).
+For a shorter operational walkthrough, see [WORKFLOW_GUIDE.md](./WORKFLOW_GUIDE.md) and the package-local [USAGE_GUIDE](../backend/pcddj_engine/story-to-script/docs/USAGE_GUIDE.md).
 
 ---
 

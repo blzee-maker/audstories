@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install FFmpeg
         # pydub shells out to ffmpeg for anything that is not a plain WAV.
@@ -28,7 +28,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends ffmpeg
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
           cache: pip
@@ -68,11 +68,16 @@ jobs:
           pip install --no-deps -e backend/asset_engine
           pip install --no-deps -e backend/pcddj_engine/story-to-script
 
-      - name: Download spaCy model
-        # Only the small model. The test fixtures load en_core_web_sm explicitly;
-        # en_core_web_lg (~560 MB) is the runtime default and no test uses it.
-        # The full install job in install.yml covers the large model.
-        run: python -m spacy download en_core_web_sm
+      - name: Download spaCy models
+        # Both are needed, for different reasons:
+        #   en_core_web_sm - loaded explicitly by the shared `nlp` test fixture.
+        #   en_core_web_lg - the CLI's default. tests/test_cli_smoke.py shells out
+        #                    to `python -m cli process` without naming a model, so
+        #                    it exercises that default and fails with OSError E050
+        #                    if only the small model is present.
+        run: |
+          python -m spacy download en_core_web_sm
+          python -m spacy download en_core_web_lg
 
       # Each suite is its own step so a failure names the engine that broke.
       - name: asset_engine
@@ -114,9 +119,9 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm

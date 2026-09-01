@@ -1,4 +1,4 @@
-﻿"""Optional Freesound fallback client (best-effort, non-fatal)."""
+"""Optional Freesound fallback client (best-effort, non-fatal)."""
 
 from __future__ import annotations
 

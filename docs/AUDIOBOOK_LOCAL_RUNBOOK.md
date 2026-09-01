@@ -1,9 +1,9 @@
 # AudioBook Local Runbook (UI + Backend)
 
-## 1) Backend (`c:\AS`)
+## 1) Backend (`backend/`)
 
 1. Install API dependencies (use the repo-root venv from SETUP.md):
-   - `pip install -r requirements.txt`
+   - `./setup.sh` (or `setup.ps1` on Windows) from the repo root installs everything
 2. Create env file:
    - copy `.env.example` to `.env`
    - set `SUPABASE_JWT_SECRET` and `GEMINI_API_KEY`
@@ -12,7 +12,7 @@
 
 The bridge starts a local worker thread automatically and runs stage jobs with `book_cli.py`.
 
-## 2) Frontend (`c:\AS UI\audstories-ui`)
+## 2) Frontend (`frontend/`)
 
 1. Copy `.env.example` to `.env`
 2. Set:

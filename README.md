@@ -99,7 +99,7 @@ TTS. You do **not** need a Supabase account unless you want the web UI.
 | `backend/pcddj_engine/story-to-script/` | NLP pipeline, Fountain DSL, narrative plan |
 | `backend/narration_tts/` | Gemini TTS synthesis |
 | `frontend/` | React + Vite single-page app |
-| `docs/` | Engine and pipeline documentation |
+| [`docs/`](docs/README.md) | Engine and pipeline documentation, indexed |
 | `examples/` | Sample Fountain scripts, the render demo, an example asset library |
 
 ## Status and known limits
@@ -124,6 +124,12 @@ All six test suites pass — **427 tests**, about a minute for the backend. Ever
 runs them on Linux; a separate weekly job reinstalls from scratch and re-renders the
 demo, so the setup instructions cannot rot unnoticed. See
 [docs/TESTING.md](docs/TESTING.md).
+
+## Contributing
+
+[CONTRIBUTING.md](CONTRIBUTING.md) covers the setup, the conventions, and the few traps
+that are easy to hit and hard to diagnose — the shadow directories, the dependency
+install order, and why the editable installs are mandatory.
 
 ## Licence
 

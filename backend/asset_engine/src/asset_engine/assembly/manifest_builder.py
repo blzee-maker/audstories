@@ -1,4 +1,4 @@
-﻿"""Build a resolution manifest."""
+"""Build a resolution manifest."""
 
 from __future__ import annotations
 

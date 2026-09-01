@@ -20,7 +20,7 @@ The v1 is intentionally simple, predictable, and reviewable. We optimize for cor
 
 ## What stays the same
 
-We keep the existing strong contracts and folder-first scaffolding from `[asset_engine/src/asset_engine/resolvers/library_resolver.py](asset_engine/src/asset_engine/resolvers/library_resolver.py)` and `[asset_engine/src/asset_engine/resolvers/catalog.py](asset_engine/src/asset_engine/resolvers/catalog.py)`. They already give us:
+We keep the existing strong contracts and folder-first scaffolding from `[asset_engine/src/asset_engine/resolvers/library_resolver.py](../backend/asset_engine/src/asset_engine/resolvers/library_resolver.py)` and `[asset_engine/src/asset_engine/resolvers/catalog.py](../backend/asset_engine/src/asset_engine/resolvers/catalog.py)`. They already give us:
 
 - per-requirement folder paths
 - explicit "missing" / "placeholder" / "skipped" outcomes
@@ -231,13 +231,13 @@ Indexing is offline. Stage 2 only reads the indexes.
 
 We change behavior in three places without breaking contracts:
 
-1. `[asset_engine/src/asset_engine/resolvers/library_resolver.py](asset_engine/src/asset_engine/resolvers/library_resolver.py)` becomes a router:
+1. `[asset_engine/src/asset_engine/resolvers/library_resolver.py](../backend/asset_engine/src/asset_engine/resolvers/library_resolver.py)` becomes a router:
    - voice: unchanged folder-first behavior
    - sfx: try local CLAP matcher → fall back to current alphabetical match → optionally fall back to Freesound
    - ambience: same
    - music: tag-catalog matcher with structured score
-2. `[asset_engine/src/asset_engine/resolvers/catalog.py](asset_engine/src/asset_engine/resolvers/catalog.py)` is wrapped, not replaced. New `clap_index.py` and `music_catalog.py` modules sit alongside it.
-3. Engine 2 CLI `[asset_engine/src/asset_engine/cli.py](asset_engine/src/asset_engine/cli.py)` gets new flags:
+2. `[asset_engine/src/asset_engine/resolvers/catalog.py](../backend/asset_engine/src/asset_engine/resolvers/catalog.py)` is wrapped, not replaced. New `clap_index.py` and `music_catalog.py` modules sit alongside it.
+3. Engine 2 CLI `[asset_engine/src/asset_engine/cli.py](../backend/asset_engine/src/asset_engine/cli.py)` gets new flags:
    - `--audio-library <path>`
    - `--music-catalog <path>`
    - `--use-clap`

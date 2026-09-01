@@ -30,10 +30,12 @@ cd frontend && npm test
 
 ## Prerequisites
 
-- **The small spaCy model.** The test fixtures load `en_core_web_sm` explicitly.
-  `setup.ps1` and `setup.sh` install it alongside `en_core_web_lg`, which is the
-  runtime default and which no test uses. Missing the small model produces 27
-  errors of the form `OSError [E050] Can't find model 'en_core_web_sm'`.
+- **Both spaCy models.** The shared `nlp` fixture loads `en_core_web_sm`
+  explicitly; missing it produces 27 errors of the form
+  `OSError [E050] Can't find model 'en_core_web_sm'`. `en_core_web_lg` is the
+  CLI's default, and `tests/test_cli_smoke.py` shells out to
+  `python -m cli process` without naming a model, so it exercises that default and
+  needs the large model present. `setup.ps1` and `setup.sh` install both.
 - **FFmpeg on PATH**, for anything that touches `pydub`.
 - No API keys are needed. Nothing in the suites calls Gemini — `narration_tts`
   mocks the client rather than reaching the network.
@@ -42,8 +44,7 @@ cd frontend && npm test
 
 [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs all six suites on
 every push and pull request, each as its own step so a failure names the engine
-that broke. It installs only `en_core_web_sm`, since no test needs the 560 MB
-model.
+that broke.
 
 [`.github/workflows/install.yml`](../.github/workflows/install.yml) is the slow
 half: it runs `setup.sh` verbatim on a clean runner, builds the Docker image, and

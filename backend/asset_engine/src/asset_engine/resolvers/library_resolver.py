@@ -1,4 +1,4 @@
-﻿"""Folder-first resolver with optional catalog/CLAP/freesound layers."""
+"""Folder-first resolver with optional catalog/CLAP/freesound layers."""
 
 from __future__ import annotations
 

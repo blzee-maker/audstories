@@ -1,4 +1,4 @@
-﻿"""Asset engine runtime configuration helpers."""
+"""Asset engine runtime configuration helpers."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Interactive audio-drama project CLI.
 
 This CLI mirrors the existing book workflow but keeps commands focused on

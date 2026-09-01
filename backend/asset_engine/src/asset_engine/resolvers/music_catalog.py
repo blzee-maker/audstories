@@ -1,4 +1,4 @@
-﻿"""Tag-driven music catalog matching for deterministic drama scoring."""
+"""Tag-driven music catalog matching for deterministic drama scoring."""
 
 from __future__ import annotations
 

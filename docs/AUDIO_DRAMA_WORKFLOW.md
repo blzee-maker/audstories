@@ -114,7 +114,7 @@ For the drama-first workflow, each chapter is a `.fountain` script in `chapters/
 
 ## End-to-End Local Workflow
 
-Run commands from the repository root, `c:\AS`.
+Run commands from `backend/`, with the repo-root virtualenv active.
 
 ### 1. Create an Audio Drama Project
 
@@ -540,7 +540,7 @@ The API allows CORS for a Vite-style frontend at:
 http://localhost:5173
 ```
 
-The sibling workspace `c:\AS UI` appears to be the frontend side referenced by the backend/frontend integration docs.
+The React single-page app that drives this workflow lives in `frontend/` (see [../frontend/README.md](../frontend/README.md)).
 
 ## Relationship to the Audiobook Workflow
 

@@ -1,0 +1,79 @@
+name: Bug report
+description: Something in the pipeline, API or UI does not behave as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: `python examples/render_demo.py` renders a WAV with no API
+        keys. If that fails, the problem is almost always the install rather than
+        the code — see [CONTRIBUTING.md](https://github.com/blzee-maker/audstories/blob/main/CONTRIBUTING.md).
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected, and what you got instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Create a project with ...
+        2. Run Stage 1
+        3. ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where does it happen
+      options:
+        - Install / setup
+        - API (FastAPI)
+        - Stage 1 - story analysis (story_processing)
+        - Stage 1 - asset requirements (asset_engine)
+        - TTS / voice generation (narration_tts)
+        - Stage 2 - render (audio_engine)
+        - Frontend (React)
+        - Docs
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      description: The two modes take different paths through the pipeline.
+      options:
+        - Audiobook
+        - Audio drama
+        - Not applicable
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error output
+      description: |
+        The server log rather than the UI message, if you can get it — errors
+        surfaced through the API are deliberately redacted of filesystem paths.
+      render: shell
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      value: |
+        - OS:
+        - Python (`python --version`):
+        - Install method: setup.sh / setup.ps1 / Docker
+        - FFmpeg (`ffmpeg -version`, first line):
+    validations:
+      required: true

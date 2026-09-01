@@ -1,4 +1,4 @@
-﻿"""Asset engine orchestration."""
+"""Asset engine orchestration."""
 
 from __future__ import annotations
 
