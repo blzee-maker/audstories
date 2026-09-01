@@ -65,6 +65,18 @@ info "Installing API + engine dependencies..."
 "$PY" -m pip install --quiet -r "$BACKEND_ROOT/requirements.txt"
 ok "Core API deps installed"
 
+# sentence-transformers pulls torch. On Linux the default PyPI wheel bundles CUDA
+# and is several GB; nothing in this codebase touches a GPU (no cuda/device calls
+# anywhere in backend/), so that download is pure waste. Install the CPU wheel
+# first and let the resolve below see the requirement as satisfied.
+# macOS wheels are CPU-only already, so this only applies to Linux.
+# To use a GPU build instead, install your preferred torch before running this.
+if [ "$(uname -s)" = "Linux" ] && ! "$PY" -c "import torch" >/dev/null 2>&1; then
+    info "Installing CPU-only PyTorch (avoids a multi-GB CUDA download)..."
+    "$PY" -m pip install --quiet --index-url https://download.pytorch.org/whl/cpu torch
+    ok "PyTorch (CPU) installed"
+fi
+
 info "Installing story-processing (NLP) dependencies..."
 "$PY" -m pip install --quiet -r "$BACKEND_ROOT/pcddj_engine/story-to-script/requirements.txt"
 ok "NLP deps installed"

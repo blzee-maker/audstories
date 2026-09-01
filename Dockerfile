@@ -54,6 +54,10 @@ RUN python -m spacy download en_core_web_lg \
 
 # --- Application --------------------------------------------------------------
 COPY backend/ backend/
+# examples/ carries render_demo.py and the example asset library (~126 KB). The
+# README points Docker users at `python examples/render_demo.py` to verify their
+# install, so it has to exist in the image.
+COPY examples/ examples/
 
 # The directories asset_engine/ and audio_engine/ shadow the real packages that
 # live one level down (asset_engine/src/asset_engine, audio_engine/audio_engine).
