@@ -13,8 +13,6 @@ description becomes sound rather than narration).
 [![Tests](https://img.shields.io/badge/tests-437%20passing-brightgreen.svg)](docs/TESTING.md)
 
 ## 🎥 Demo
-
-<video src="https://github.com/blzee-maker/audstories/raw/refs/heads/main/docs/Video/audstories_prelaunch.mp4" controls width="800"></video>
 ---
 
 ## The pipeline
