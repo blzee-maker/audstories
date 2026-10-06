@@ -10,7 +10,7 @@ description becomes sound rather than narration).
 [![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](https://python.org)
 [![Tests](https://img.shields.io/badge/tests-437%20passing-brightgreen.svg)](docs/TESTING.md)
 
-(https://github.com/blzee-maker/audstories/blob/main/docs/Video/audstories_prelaunch.mp4)
+## (https://github.com/blzee-maker/audstories/blob/main/docs/Video/audstories_prelaunch.mp4)
 ---
 
 ## The pipeline
