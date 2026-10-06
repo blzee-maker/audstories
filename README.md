@@ -1,3 +1,5 @@
+
+
 # AudStories
 
 Turn a story into finished audio. AudStories takes prose or a Fountain script, works out
@@ -10,6 +12,9 @@ description becomes sound rather than narration).
 [![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](https://python.org)
 [![Tests](https://img.shields.io/badge/tests-437%20passing-brightgreen.svg)](docs/TESTING.md)
 
+## 🎥 Demo
+
+<video src="https://github.com/blzee-maker/audstories/raw/refs/heads/main/docs/Video/audstories_prelaunch.mp4" controls width="800"></video>
 
 ---
 
