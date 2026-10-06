@@ -14,7 +14,7 @@ description becomes sound rather than narration).
 
 ## 🎥 Demo
 
-[![AudStories demo preview (click to watch with sound)](docs/Video/audstories_prelaunch.gif)](https://github.com/blzee-maker/audstories/raw/refs/heads/main/docs/Video/audstories_prelaunch.mp4)
+<a href="https://github.com/blzee-maker/audstories/raw/refs/heads/main/docs/Video/audstories_prelaunch.mp4"><img src="docs/Video/audstories_prelaunch.gif" alt="AudStories demo preview (click to watch with sound)" width="100%"></a>
 
 ---
 
