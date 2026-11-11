@@ -30,6 +30,34 @@ provided into a timeline and renders it.
 That pause is the point: you decide what the piece sounds like, rather than accepting
 whatever a model picks.
 
+## Product case study: from story to finished audio
+
+**User problem — product hypothesis, not a research finding.** Turning a story into
+audio involves more than generating a voice: creators also need to decide what should
+be spoken or dramatized, source the right audio, and bring it together into a coherent
+mix. AudStories' product bet is that making those steps visible and reviewable can make
+the process more manageable without taking creative control away.
+
+**MVP.** The implemented workflow analyzes a story into an audio plan, surfaces the
+assets it needs, lets the creator provide or generate those assets, then resolves them
+into a timeline and renders a WAV. It supports both narration-led audiobooks and
+character-led audio dramas. See the [workflow guide](docs/WORKFLOW_GUIDE.md) for the
+implemented stages.
+
+**Key product decisions.** Keep audiobook and audio drama as distinct modes, since
+they treat narration differently. Pause between analysis and rendering so creators
+can choose or supply voices, music, ambience, and effects instead of accepting
+unreviewed model selections. Use a library-first asset workflow with a manifest of
+resolution outcomes, favoring a reviewable handoff over opaque automatic sourcing.
+
+**Proposed validation — not yet run.** Test the end-to-end task with target creators;
+observe whether they can reach a playable render without step-by-step help, where they
+get blocked, and how much manual asset work remains. Measure task completion and
+time-to-first-playable-render, then ask whether the result matches their intent and
+whether they would use the workflow again. Establish a baseline and success thresholds
+before testing. This repository reports no user-study findings, product metrics, or
+validation results.
+
 ## Architecture
 
 ![AudStories architecture: React SPA through uvicorn and FastAPI to the pipeline worker and four engines, with SQLite, workspace files, Supabase and Gemini](docs/images/architecture.png)
